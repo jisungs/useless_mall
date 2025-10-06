@@ -43,6 +43,7 @@
 - [x] 마이그레이션 완료
 - [x] 정적 파일 수집 완료
 - [x] 로컬 서버 테스트 완료
+- [x] **Railway 배포 성공**: `uselessmall-production.up.railway.app`
 
 ### 📦 현재 상품 목록 (3개 완료)
 
@@ -185,7 +186,11 @@ fake_shopping_mall/
 
 ## 🚀 배포
 
-### Railway 배포
+### Railway 배포 ✅ **성공**
+- **배포 URL**: `https://uselessmall-production.up.railway.app`
+- **상태**: 정상 작동 중
+- **테스트 페이지**: "🎉 쓰잘데기 테스트 배포 성공!" 메시지 확인
+
 자세한 배포 방법은 [Railway_배포_가이드.md](plans/Railway_배포_가이드.md)를 참고하세요.
 
 #### 배포 단계 요약
@@ -193,6 +198,29 @@ fake_shopping_mall/
 2. Railway에서 새 프로젝트 생성
 3. 환경변수 설정
 4. 배포 확인
+
+### 🔧 배포 문제 해결 과정
+
+#### **문제 1: Railway Django 프로젝트 인식 실패**
+**증상**: Railway에서 Django 프로젝트를 인식하지 못함
+**해결**: 
+- Procfile 형식 수정: `web: gunicorn config.wsgi:application --log-file -`
+- Django 프로젝트 구조 확인
+
+#### **문제 2: Bad Request (400) 오류**
+**증상**: `uselessmall-production.up.railway.app` 접속 시 400 오류
+**해결**:
+- ALLOWED_HOSTS 설정: `uselessmall-production.up.railway.app,*.railway.app`
+- 강력한 SECRET_KEY 생성 및 설정
+- DEBUG=False로 프로덕션 설정
+
+#### **환경변수 설정**
+Railway 대시보드에서 다음 환경변수 설정:
+```
+SECRET_KEY=sVC9zOSP2IiHvr9ChkfBdfqOLUbQtrC18K6AfACc9TjD_ncTAo3SVSjudlJtJFmwicA
+DEBUG=False
+ALLOWED_HOSTS=uselessmall-production.up.railway.app,*.railway.app
+```
 
 ## 📊 성공 기준
 
