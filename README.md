@@ -53,11 +53,12 @@
 
 ### 🔄 다음 작업 예정
 
-#### **Day 1: 프로젝트 기초** (6시간)
-- [ ] Django 프로젝트 생성 (products, users, cart, orders 앱)
-- [ ] 데이터베이스 모델 생성 (Category, Product)
-- [ ] Admin 커스터마이징
-- [ ] 기본 템플릿 작성
+#### **Day 1 진행 상황**
+- ✅ **Task 1-1: 프로젝트 생성** 완료
+- ✅ **Task 1-3: Git 설정** 완료
+- 🔄 **Task 1-2: 데이터베이스 모델** 진행 예정
+- 🔄 **Task 1-4: Admin 커스터마이징** 진행 예정
+- 🔄 **Task 1-5: 기본 템플릿** 진행 예정
 
 #### **Day 2: 기본 페이지** (6시간)
 - [ ] 홈페이지 개발
@@ -168,10 +169,20 @@ python manage.py runserver 8001
 fake_shopping_mall/
 ├── config/                 # Django 프로젝트 설정
 │   ├── settings.py        # 메인 설정 파일
-│   └── urls.py            # URL 라우팅
+│   ├── urls.py            # URL 라우팅
+│   ├── wsgi.py            # WSGI 설정
+│   └── asgi.py            # ASGI 설정
+├── products/               # 상품 앱
+├── users/                  # 사용자 앱
+├── cart/                   # 장바구니 앱
+├── orders/                 # 주문 앱
 ├── test_app/              # 테스트 앱 (배포 확인용)
 ├── static/                # 정적 파일
-│   └── img/               # 상품 이미지 (10개)
+│   ├── img/               # 상품 이미지 (10개)
+│   └── images/             # 추가 이미지 폴더
+│       └── products/       # 상품별 이미지
+├── .vscode/               # IDE 설정
+│   └── settings.json      # 가상환경 설정
 ├── plans/                 # 프로젝트 계획서
 │   ├── 최종_7일_실행계획.md
 │   ├── Railway_배포_가이드.md
