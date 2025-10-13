@@ -28,9 +28,13 @@
                         <div class="d-flex gap-2">
                             <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary flex-grow-1">자세히 보기</a>
                             {% if product.is_active %}
-                            <button class="btn btn-primary" onclick="addToCart('{{ product.name }}', {{ product.price }})">
-                                🛒
-                            </button>
+                            <form method="post" action="{% url 'cart:cart_add' product.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary">
+                                    🛒
+                                </button>
+                            </form>
                             <span class="badge bg-success">판매중</span>
                             {% else %}
                             <span class="badge bg-secondary">품절</span>

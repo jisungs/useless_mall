@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}프로필 - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">사용자 프로필</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>기본 정보</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>사용자명:</strong></td>
+                                    <td>{{ user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>이메일:</strong></td>
+                                    <td>{{ user.email|default:"설정되지 않음" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>가입일:</strong></td>
+                                    <td>{{ user.date_joined|date:"Y년 m월 d일" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>마지막 로그인:</strong></td>
+                                    <td>{{ user.last_login|date:"Y년 m월 d일 H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>활동 정보</h5>
+                            <div class="alert alert-info">
+                                <h6>쓰잘데기 회원</h6>
+                                <p class="mb-0">완전히 쓸모없지만 재미있는 상품들을 즐기고 계시는군요!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-primary">홈으로 돌아가기</a>
+                        <a href="{% url 'logout' %}" class="btn btn-secondary">로그아웃</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-bold);
+    color: var(--primary-black);
+}
+
+.table td {
+    padding: 8px 0;
+    border: none;
+}
+
+.alert-info {
+    background-color: var(--gray-100);
+    border-color: var(--gray-200);
+    color: var(--gray-800);
+}
+</style>
+{% endblock %}

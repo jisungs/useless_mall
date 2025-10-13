@@ -5,7 +5,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('test_app.urls')),
+    path('', include('shop_app.urls')),
+    path('users/', include('users.urls')),
+    path('cart/', include('cart.urls')),
 ]
 
 # Serve static files during development

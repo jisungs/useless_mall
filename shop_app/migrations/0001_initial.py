@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('stock_quantity', models.PositiveIntegerField(default=999, verbose_name='재고 수량')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='생성일')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='수정일')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='test_app.category', verbose_name='카테고리')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop_app.category', verbose_name='카테고리')),
             ],
             options={
                 'verbose_name': '상품',
