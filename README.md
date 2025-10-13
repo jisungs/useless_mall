@@ -18,7 +18,7 @@
 
 ## 🚀 현재 진행 상황
 
-### ✅ 완료된 작업 (Day 0)
+### ✅ 완료된 작업 (Day 0-1)
 
 #### **Task 0-1: 컨셉 및 자료 준비** ✅ **완료**
 - [x] 쇼핑몰 이름 최종 확정: **"쓰잘데기"**
@@ -45,6 +45,46 @@
 - [x] 로컬 서버 테스트 완료
 - [x] **Railway 배포 성공**: `uselessmall-production.up.railway.app`
 
+#### **Task 1-1: 프로젝트 생성** ✅ **완료**
+- [x] Django 프로젝트 생성 (`config` 프로젝트)
+- [x] 앱 생성 (`test_app`)
+- [x] 기본 설정 (INSTALLED_APPS, TEMPLATES, STATIC, MEDIA)
+- [x] 정적 파일 폴더 구조 생성
+
+#### **Task 1-2: 데이터베이스 모델** ✅ **완료**
+- [x] **Category 모델 생성**:
+  - `name`: 카테고리명 (CharField, 100자)
+  - `description`: 설명 (TextField, 선택사항)
+  - `created_at`, `updated_at`: 자동 타임스탬프
+- [x] **Product 모델 생성**:
+  - `name`: 상품명 (CharField, 200자)
+  - `price`: 가격 (DecimalField, 10자리, 소수점 2자리)
+  - `description`: 상품 설명 (TextField)
+  - `image_path`: 이미지 파일명 (CharField, 200자)
+  - `category`: 카테고리 (ForeignKey → Category)
+  - `is_active`: 판매 중 (BooleanField, 기본값 True)
+  - `stock_quantity`: 재고 수량 (PositiveIntegerField, 기본값 999)
+  - `created_at`, `updated_at`: 자동 타임스탬프
+- [x] **마이그레이션 생성 및 적용**: `0001_initial.py`, `0002_remove_product_is_fake.py`
+- [x] **슈퍼유저 생성**: admin/admin123
+
+#### **Task 1-3: Git 설정** ✅ **완료**
+- [x] GitHub 레포지토리 생성
+- [x] .gitignore 작성
+- [x] 초기 커밋 및 푸시
+
+#### **Task 1-4: Admin 커스터마이징** ✅ **완료**
+- [x] **CategoryAdmin 클래스**:
+  - `list_display`: name, description, created_at
+  - `list_filter`: created_at
+  - `search_fields`: name, description
+- [x] **ProductAdmin 클래스**:
+  - `list_display`: name, category, price, is_active, stock_quantity, created_at
+  - `list_filter`: category, is_active, created_at
+  - `search_fields`: name, description
+  - `list_editable`: price, is_active, stock_quantity
+  - `fieldsets`: 기본 정보, 이미지, 상태로 그룹화
+
 ### 📦 현재 상품 목록 (3개 완료)
 
 1. **100명 유튜버 포토카드** - 100명 구독자를 가진 유튜버 지성스의 친필 사인이 담긴 포토카드
@@ -53,12 +93,13 @@
 
 ### 🔄 다음 작업 예정
 
-#### **Day 1 진행 상황**
+#### **Day 1 진행 상황** (90% 완료)
 - ✅ **Task 1-1: 프로젝트 생성** 완료
+- ✅ **Task 1-2: 데이터베이스 모델** 완료
 - ✅ **Task 1-3: Git 설정** 완료
-- 🔄 **Task 1-2: 데이터베이스 모델** 진행 예정
-- 🔄 **Task 1-4: Admin 커스터마이징** 진행 예정
+- ✅ **Task 1-4: Admin 커스터마이징** 완료
 - 🔄 **Task 1-5: 기본 템플릿** 진행 예정
+- 🔄 **Task 1-6: 초기 테스트** 진행 예정
 
 #### **Day 2: 기본 페이지** (6시간)
 - [ ] 홈페이지 개발
@@ -176,7 +217,7 @@ fake_shopping_mall/
 ├── users/                  # 사용자 앱
 ├── cart/                   # 장바구니 앱
 ├── orders/                 # 주문 앱
-├── test_app/              # 테스트 앱 (배포 확인용)
+├── test_app/              # 메인 앱 (Category, Product 모델 포함)
 ├── static/                # 정적 파일
 │   ├── img/               # 상품 이미지 (10개)
 │   └── images/             # 추가 이미지 폴더
