@@ -5,8 +5,8 @@ from django.utils.html import escape
 from .models import Product, Category
 
 def home(request):
-    """홈페이지 - 최신 8개 상품 표시"""
-    products = Product.objects.filter(is_active=True).order_by('-created_at')[:8]
+    """홈페이지 - 모든 활성 상품 표시"""
+    products = Product.objects.filter(is_active=True).order_by('-created_at')
     context = {
         'products': products
     }

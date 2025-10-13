@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">사용자 프로필</h2>
@@ -33,46 +33,67 @@
                             </table>
                         </div>
                         <div class="col-md-6">
-                            <h5>활동 정보</h5>
-                            <div class="alert alert-info">
-                                <h6>쓰잘데기 회원</h6>
-                                <p class="mb-0">완전히 쓸모없지만 재미있는 상품들을 즐기고 계시는군요!</p>
+                            <h5>주문 현황</h5>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h4 class="text-primary mb-1">{{ total_orders }}</h4>
+                                        <small class="text-muted">총 주문</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h4 class="text-success mb-1">₩{{ total_spent|floatformat:0 }}</h4>
+                                        <small class="text-muted">총 구매액</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
+                    <div class="mt-4">
+                        <h5>최근 주문 내역 (최근 5개)</h5>
+                        {% if orders %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>주문번호</th>
+                                            <th>주문일</th>
+                                            <th>받는분</th>
+                                            <th>금액</th>
+                                            <th>상태</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in orders %}
+                                        <tr>
+                                            <td>#{{ order.id }}</td>
+                                            <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                                            <td>{{ order.shipping_name }}</td>
+                                            <td>₩{{ order.total|floatformat:0 }}</td>
+                                            <td>
+                                                <span class="badge bg-success">{{ order.status }}</span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="/orders/orders/" class="btn btn-outline-primary">전체 주문 보기</a>
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center">아직 주문 내역이 없습니다.</p>
+                        {% endif %}
+                    </div>
+                    
                     <div class="text-center mt-4">
-                        <a href="{% url 'home' %}" class="btn btn-primary">홈으로 돌아가기</a>
-                        <a href="{% url 'logout' %}" class="btn btn-secondary">로그아웃</a>
+                        <a href="/" class="btn btn-primary">홈으로 돌아가기</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.card {
-    border: 1px solid var(--gray-300);
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-title {
-    font-family: var(--font-primary);
-    font-weight: var(--font-bold);
-    color: var(--primary-black);
-}
-
-.table td {
-    padding: 8px 0;
-    border: none;
-}
-
-.alert-info {
-    background-color: var(--gray-100);
-    border-color: var(--gray-200);
-    color: var(--gray-800);
-}
-</style>
 {% endblock %}
