@@ -34,7 +34,18 @@
             <div class="product-card hover-lift">
                 <img src="{% static 'img/product_01.jpg' %}" alt="{{ product.name }}" class="product-image">
                 <h3 class="product-title">{{ product.name }}</h3>
-                <p class="product-price">₩{{ product.price|floatformat:0 }}</p>
+                <div class="product-price-info">
+                    <p class="product-price">₩{{ product.price|floatformat:0 }}</p>
+                    <p class="product-shipping">
+                        <small class="text-muted">
+                            {% if product.shipping_fee == 0 %}
+                                <span class="badge bg-success">무료배송</span>
+                            {% else %}
+                                배송비 ₩{{ product.shipping_fee|floatformat:0 }}
+                            {% endif %}
+                        </small>
+                    </p>
+                </div>
                 <p class="product-description">{{ product.description }}</p>
                 <a href="/products/{{ product.id }}/" class="btn btn-primary w-100">상품보기</a>
             </div>

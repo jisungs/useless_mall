@@ -22,9 +22,23 @@
                     <p class="card-text text-muted">{{ product.category.name }}</p>
                     <p class="card-text flex-grow-1">{{ product.description|truncatewords:15 }}</p>
                     <div class="mt-auto">
-                        <p class="card-text">
-                            <strong class="text-primary fs-5">{{ product.get_formatted_price }}</strong>
-                        </p>
+                        <div class="price-info mb-2">
+                            <p class="card-text mb-1">
+                                <strong class="text-primary fs-5">{{ product.get_formatted_price }}</strong>
+                            </p>
+                            <p class="card-text mb-1">
+                                <small class="text-muted">
+                                    {% if product.shipping_fee == 0 %}
+                                        <span class="badge bg-success">무료배송</span>
+                                    {% else %}
+                                        배송비 ₩{{ product.shipping_fee|floatformat:0 }}
+                                    {% endif %}
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">총액: <strong>{{ product.get_formatted_total_price }}</strong></small>
+                            </p>
+                        </div>
                         <div class="d-flex gap-2">
                             <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary flex-grow-1">자세히 보기</a>
                             {% if product.is_active %}
