@@ -44,6 +44,16 @@ def order_create(request):
         # 주문 생성 (트랜잭션 사용)
         try:
             with transaction.atomic():
+                # 재고 검증 (주문 전 최종 확인)
+                for item in cart:
+                    product = item['product']
+                    quantity = item['quantity']
+                    
+                    # 재고 부족 확인
+                    if not product.can_purchase(quantity):
+                        messages.error(request, f'{product.name}의 재고가 부족합니다. (현재 재고: {product.stock_quantity}개, 요청 수량: {quantity}개)')
+                        return render(request, 'orders/checkout.html', {'cart': cart})
+                
                 # 주문 총액 계산
                 total = cart.get_total_price()
                 
@@ -56,12 +66,19 @@ def order_create(request):
                     shipping_phone=shipping_phone
                 )
                 
-                # 주문 상품 생성
+                # 주문 상품 생성 및 재고 차감
                 for item in cart:
+                    product = item['product']
+                    quantity = item['quantity']
+                    
+                    # 재고 차감
+                    if not product.reduce_stock(quantity):
+                        raise Exception(f'{product.name}의 재고 차감에 실패했습니다.')
+                    
                     OrderItem.objects.create(
                         order=order,
-                        product=item['product'],
-                        quantity=item['quantity'],
+                        product=product,
+                        quantity=quantity,
                         price=item['price']
                     )
                 

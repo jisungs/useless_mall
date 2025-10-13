@@ -60,3 +60,52 @@ class Product(models.Model):
     def get_formatted_total_price(self):
         """총 가격을 원화 형식으로 반환"""
         return f"₩{self.get_total_price():,.0f}"
+    
+    def get_stock_status(self):
+        """재고 상태를 반환"""
+        if self.stock_quantity == 0:
+            return "품절"
+        elif self.stock_quantity <= 10:
+            return "재고부족"
+        elif self.stock_quantity <= 50:
+            return "재고적음"
+        else:
+            return "충분"
+    
+    def get_stock_status_class(self):
+        """재고 상태에 따른 CSS 클래스 반환"""
+        status = self.get_stock_status()
+        if status == "품절":
+            return "bg-danger"
+        elif status == "재고부족":
+            return "bg-warning"
+        elif status == "재고적음":
+            return "bg-info"
+        else:
+            return "bg-success"
+    
+    def is_in_stock(self):
+        """재고가 있는지 확인"""
+        return self.stock_quantity > 0
+    
+    def is_low_stock(self):
+        """재고가 부족한지 확인 (10개 이하)"""
+        return self.stock_quantity <= 10
+    
+    def can_purchase(self, quantity=1):
+        """지정된 수량만큼 구매 가능한지 확인"""
+        return self.stock_quantity >= quantity
+    
+    def reduce_stock(self, quantity):
+        """재고 차감 (주문 시 사용)"""
+        if self.can_purchase(quantity):
+            self.stock_quantity -= quantity
+            self.save()
+            return True
+        return False
+    
+    def add_stock(self, quantity):
+        """재고 추가 (관리자가 재고 보충 시 사용)"""
+        self.stock_quantity += quantity
+        self.save()
+        return True

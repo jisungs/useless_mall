@@ -66,6 +66,17 @@
                         </div>
                         <div class="row">
                             <div class="col-6">
+                                <small class="text-muted">재고 상태:</small>
+                            </div>
+                            <div class="col-6 text-end">
+                                <span class="badge {{ product.get_stock_status_class }} fs-6">{{ product.get_stock_status }}</span>
+                                {% if product.stock_quantity > 0 %}
+                                    <small class="text-muted">({{ product.stock_quantity }}개 남음)</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
                                 <small class="text-muted">총 금액:</small>
                             </div>
                             <div class="col-6 text-end">

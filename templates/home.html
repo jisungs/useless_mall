@@ -45,6 +45,14 @@
                             {% endif %}
                         </small>
                     </p>
+                    <p class="product-stock">
+                        <small class="text-muted">
+                            <span class="badge {{ product.get_stock_status_class }}">{{ product.get_stock_status }}</span>
+                            {% if product.stock_quantity > 0 %}
+                                <span class="text-muted">({{ product.stock_quantity }}개 남음)</span>
+                            {% endif %}
+                        </small>
+                    </p>
                 </div>
                 <p class="product-description">{{ product.description }}</p>
                 <a href="/products/{{ product.id }}/" class="btn btn-primary w-100">상품보기</a>

@@ -35,6 +35,14 @@
                                     {% endif %}
                                 </small>
                             </p>
+                            <p class="card-text mb-1">
+                                <small class="text-muted">
+                                    <span class="badge {{ product.get_stock_status_class }}">{{ product.get_stock_status }}</span>
+                                    {% if product.stock_quantity > 0 %}
+                                        ({{ product.stock_quantity }}개 남음)
+                                    {% endif %}
+                                </small>
+                            </p>
                             <p class="card-text">
                                 <small class="text-muted">총액: <strong>{{ product.get_formatted_total_price }}</strong></small>
                             </p>
