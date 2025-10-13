@@ -1,0 +1,698 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}쓰잘데기 - 세상에서 제일 쓸모없는 상점{% endblock %}</title>
+    
+    <!-- SEO 메타데이터 -->
+    <meta name="description" content="완전히 필요없지만 재미있는 물건들만 파는 특별한 쇼핑몰. 실용성은 포기하고 재미만 추구하는 철학으로 만들어진 상품들을 만나보세요.">
+    <meta name="keywords" content="쓰잘데기, 쓸모없는 상품, 재미있는 쇼핑몰, 유머 상품, 아이러니 쇼핑몰">
+    <meta name="author" content="쓰잘데기">
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Google Fonts - 궁서체 대체 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        /* 쓰잘데기 디자인 시스템 CSS */
+        
+        /* CSS Variables */
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --gray-100: #F5F5F5;
+            --gray-200: #EEEEEE;
+            --gray-300: #E0E0E0;
+            --gray-400: #BDBDBD;
+            --gray-500: #9E9E9E;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --gray-900: #212121;
+            --accent-red: #F44336;
+            --accent-green: #4CAF50;
+            --font-primary: 'Noto Serif KR', '궁서체', serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 1.875rem;
+            --text-4xl: 2.25rem;
+            --text-5xl: 3rem;
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --border-radius: 0;
+        }
+        
+        /* Bootstrap Override */
+        :root {
+            --bs-primary: var(--primary-black);
+            --bs-secondary: var(--gray-600);
+            --bs-success: var(--accent-green);
+            --bs-danger: var(--accent-red);
+            --bs-light: var(--gray-100);
+            --bs-dark: var(--gray-900);
+            --bs-font-sans-serif: var(--font-primary);
+            --bs-font-serif: var(--font-primary);
+            --bs-border-radius: var(--border-radius);
+        }
+        
+        /* Base Styles */
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--primary-black);
+            background-color: var(--primary-white);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-primary);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+        }
+        
+        .hero-title {
+            font-size: var(--text-5xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--text-xl);
+            color: var(--gray-600);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .hero-description {
+            font-size: var(--text-lg);
+            color: var(--gray-700);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .section-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .section-description {
+            font-size: var(--text-lg);
+            color: var(--gray-700);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* Navigation */
+        .navbar {
+            background-color: var(--primary-white);
+            border-bottom: 2px solid var(--primary-black);
+            padding: var(--space-md) 0;
+            font-family: var(--font-primary);
+        }
+        
+        .navbar-brand {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            text-decoration: none;
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--primary-black);
+            font-weight: var(--font-medium);
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            background-color: var(--gray-100);
+            text-decoration: underline;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            border: 2px solid var(--primary-black);
+            font-family: var(--font-primary);
+            font-weight: var(--font-medium);
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            border-color: var(--primary-black);
+        }
+        
+        /* Cards */
+        .product-card {
+            background-color: var(--primary-white);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            padding: var(--space-lg);
+            transition: all 0.3s ease;
+            font-family: var(--font-primary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .product-card:hover {
+            border-color: var(--primary-black);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .product-price {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-description {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-bottom: var(--space-md);
+        }
+        
+        /* Layout */
+        .section {
+            padding: var(--space-3xl) 0;
+        }
+        
+        .hero-section {
+            background-color: var(--primary-white);
+            padding: var(--space-3xl) 0;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        /* Products Section */
+        .products-header {
+            padding: var(--space-xl) 0;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+        
+        .products-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-md);
+        }
+        
+        .products-count {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        /* Cart Section */
+        .cart-container {
+            background-color: var(--gray-100);
+            padding: var(--space-xl);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .empty-cart {
+            padding: var(--space-2xl);
+        }
+        
+        .cart-summary {
+            background-color: var(--primary-white);
+            border: 1px solid var(--gray-300);
+            padding: var(--space-xl);
+        }
+        
+        .cart-total {
+            background-color: var(--gray-100);
+            padding: var(--space-lg);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .total-price {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin: var(--space-md) 0;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--gray-100);
+            padding: var(--space-xl) 0;
+            border-top: 1px solid var(--gray-200);
+            margin-top: var(--space-3xl);
+        }
+        
+        .footer h5 {
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .footer p {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-xs);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Hover Effects */
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+        
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-muted {
+            color: var(--gray-600);
+        }
+        
+        .bg-light {
+            background-color: var(--gray-100);
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: var(--text-3xl);
+            }
+            
+            .hero-subtitle {
+                font-size: var(--text-lg);
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+            
+            .navbar-nav {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">쓰잘데기</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cart">장바구니</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_detail' 1 %}#inquiry">고객문의</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_detail' 1 %}#qna">Q&A</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>쓰잘데기</h5>
+                    <p>세상에서 제일 쓸모없는 상점</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2024 쓰잘데기. All rights reserved.</p>
+                    <p>실용성은 포기하고 재미만 추구합니다.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // 쓰잘데기 쇼핑몰 JavaScript
+        
+        // 장바구니 데이터
+        let cart = [];
+        
+        // DOM 요소들
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartSummaryContainer = document.getElementById('cart-summary');
+        const cartListContainer = document.getElementById('cart-list');
+        const totalPriceElement = document.getElementById('total-price');
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartFromStorage();
+            updateCartDisplay();
+            initializeAnimations();
+        });
+        
+        // 장바구니에 상품 추가
+        function addToCart(productName, price) {
+            // 이미 장바구니에 있는 상품인지 확인
+            const existingItem = cart.find(item => item.name === productName);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name: productName,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            // 로컬 스토리지에 저장
+            saveCartToStorage();
+            
+            // 장바구니 표시 업데이트
+            updateCartDisplay();
+            
+            // 성공 메시지 표시
+            showAlert(`${productName}이(가) 장바구니에 추가되었습니다!`, 'success');
+            
+            // 장바구니 섹션으로 스크롤
+            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 장바구니에서 상품 제거
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            saveCartToStorage();
+            updateCartDisplay();
+            showAlert(`${productName}이(가) 장바구니에서 제거되었습니다.`, 'danger');
+        }
+        
+        // 수량 변경
+        function updateQuantity(productName, newQuantity) {
+            const item = cart.find(item => item.name === productName);
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(productName);
+                } else {
+                    item.quantity = newQuantity;
+                    saveCartToStorage();
+                    updateCartDisplay();
+                }
+            }
+        }
+        
+        // 장바구니 표시 업데이트
+        function updateCartDisplay() {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart text-center">
+                        <p class="text-muted">장바구니가 비어있습니다.</p>
+                        <p class="text-muted">위의 상품들을 선택해보세요!</p>
+                    </div>
+                `;
+                cartSummaryContainer.style.display = 'none';
+            } else {
+                cartItemsContainer.innerHTML = '';
+                cartSummaryContainer.style.display = 'block';
+                
+                // 장바구니 아이템 목록 생성
+                cartListContainer.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">₩${item.price.toLocaleString()} × ${item.quantity}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.name}', ${item.quantity - 1})">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" 
+                                       onchange="updateQuantity('${item.name}', parseInt(this.value))" min="1">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.name}', ${item.quantity + 1})">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart('${item.name}')">삭제</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // 총 금액 계산 및 표시
+                const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                totalPriceElement.textContent = `₩${totalPrice.toLocaleString()}`;
+            }
+        }
+        
+        // 주문하기
+        function checkout() {
+            if (cart.length === 0) {
+                showAlert('장바구니가 비어있습니다.', 'danger');
+                return;
+            }
+            
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // 주문 확인 다이얼로그
+            const orderItems = cart.map(item => `${item.name} × ${item.quantity}`).join('\n');
+            
+            if (confirm(`주문을 확인하시겠습니까?\n\n주문 상품:\n${orderItems}\n\n총 금액: ₩${totalPrice.toLocaleString()}`)) {
+                // 주문 처리 (실제로는 서버로 전송)
+                processOrder();
+            }
+        }
+        
+        // 주문 처리
+        function processOrder() {
+            // 로딩 표시
+            const checkoutBtn = document.querySelector('.cart-total .btn');
+            const originalText = checkoutBtn.textContent;
+            checkoutBtn.innerHTML = '<span class="loading"></span> 주문 처리 중...';
+            checkoutBtn.disabled = true;
+            
+            // 실제 주문 처리 시뮬레이션
+            setTimeout(() => {
+                // 주문 완료
+                showAlert('주문이 완료되었습니다! 쓰잘데기를 선택해주셔서 감사합니다.', 'success');
+                
+                // 장바구니 비우기
+                cart = [];
+                saveCartToStorage();
+                updateCartDisplay();
+                
+                // 버튼 원상복구
+                checkoutBtn.textContent = originalText;
+                checkoutBtn.disabled = false;
+                
+                // 홈으로 스크롤
+                document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+        
+        // 로컬 스토리지에 장바구니 저장
+        function saveCartToStorage() {
+            localStorage.setItem('ssaldagi_cart', JSON.stringify(cart));
+        }
+        
+        // 로컬 스토리지에서 장바구니 불러오기
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('ssaldagi_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+        
+        // 알림 메시지 표시
+        function showAlert(message, type = 'info') {
+            // 기존 알림 제거
+            const existingAlert = document.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // 새 알림 생성
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            // 페이지 상단에 추가
+            document.body.insertBefore(alertDiv, document.body.firstChild);
+            
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
+        
+        // 애니메이션 초기화
+        function initializeAnimations() {
+            // 스크롤 애니메이션
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // 애니메이션 대상 요소들 관찰
+            document.querySelectorAll('.product-card, .section-title, .section-description').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // 네비게이션 스크롤 효과
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            } else {
+                navbar.style.backgroundColor = '#FFFFFF';
+                navbar.style.backdropFilter = 'none';
+            }
+        });
+        
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // 상품 페이지로 이동
+        function goToProduct(name, price) {
+            // 임시로 상품 상세 페이지로 이동 (실제로는 Django URL 사용)
+            window.location.href = `/products/1/`;
+        }
+        
+        // 개발자 도구 감지 (재미 요소)
+        let devtools = {open: false, orientation: null};
+        setInterval(function() {
+            if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.inner.width > 200) {
+                if (!devtools.open) {
+                    devtools.open = true;
+                    console.log('%c쓰잘데기 개발자 도구에 오신 것을 환영합니다!', 'color: #000; font-size: 20px; font-weight: bold;');
+                    console.log('%c이 사이트는 완전히 쓸모없는 상품들을 판매합니다.', 'color: #666; font-size: 14px;');
+                    console.log('%c실용성은 포기하고 재미만 추구하는 쇼핑몰입니다.', 'color: #666; font-size: 14px;');
+                }
+            } else {
+                devtools.open = false;
+            }
+        }, 500);
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

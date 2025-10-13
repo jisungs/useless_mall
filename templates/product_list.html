@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}상품 목록 - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">🛍️ 모든 상품</h1>
+            <p class="lead mb-5">쓸모없지만 재미있는 모든 상품들을 만나보세요!</p>
+        </div>
+    </div>
+    
+    {% if products %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="product-card card h-100">
+                <img src="{{ product.get_image_url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-muted">{{ product.category.name }}</p>
+                    <p class="card-text flex-grow-1">{{ product.description|truncatewords:15 }}</p>
+                    <div class="mt-auto">
+                        <p class="card-text">
+                            <strong class="text-primary fs-5">{{ product.get_formatted_price }}</strong>
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary flex-grow-1">자세히 보기</a>
+                            {% if product.is_active %}
+                            <button class="btn btn-primary" onclick="addToCart('{{ product.name }}', {{ product.price }})">
+                                🛒
+                            </button>
+                            <span class="badge bg-success">판매중</span>
+                            {% else %}
+                            <span class="badge bg-secondary">품절</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center">
+        <div class="alert alert-info">
+            <h4>상품이 아직 등록되지 않았습니다</h4>
+            <p>관리자 페이지에서 상품을 등록해주세요!</p>
+            <a href="/admin/" class="btn btn-primary">관리자 페이지로 이동</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
