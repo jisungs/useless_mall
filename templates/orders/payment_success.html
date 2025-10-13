@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}결제 완료 - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                </div>
+                
+                <h1 class="mb-4 text-success">🎉 결제가 완료되었습니다!</h1>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">주문 정보</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>주문번호:</strong> #{{ order.id }}</p>
+                                <p><strong>주문일:</strong> {{ order.created_at|date:"Y년 m월 d일 H:i" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>주문 상태:</strong> 
+                                    <span class="badge bg-success">{{ order.get_status_display }}</span>
+                                </p>
+                                <p><strong>총 금액:</strong> <span class="fw-bold text-primary">{{ order.get_formatted_total }}</span></p>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h6 class="mb-3">주문 상품</h6>
+                        {% for item in order.items.all %}
+                            <div class="row align-items-center mb-2">
+                                <div class="col-md-2">
+                                    <img src="{{ item.product.get_image_url }}" 
+                                         alt="{{ item.product.name }}" 
+                                         class="img-fluid rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-0">{{ item.product.name }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p class="mb-0">수량: {{ item.quantity }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p class="mb-0 fw-bold">{{ item.get_formatted_total }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        <hr>
+                        
+                        <h6 class="mb-3">배송 정보</h6>
+                        <p><strong>받는 사람:</strong> {{ order.shipping_name }}</p>
+                        <p><strong>배송 주소:</strong> {{ order.shipping_address }}</p>
+                        <p><strong>연락처:</strong> {{ order.shipping_phone }}</p>
+                        
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>안내:</strong> 이 쇼핑몰은 데모용입니다. 실제 배송은 이루어지지 않습니다.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary me-2">
+                        주문 상세 보기
+                    </a>
+                    <a href="{% url 'orders:order_list' %}" class="btn btn-outline-primary me-2">
+                        주문 목록
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                        홈으로
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-bold);
+    color: var(--primary-black);
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.text-success {
+    color: var(--accent-green) !important;
+}
+</style>
+{% endblock %}

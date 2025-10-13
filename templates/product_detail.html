@@ -21,11 +21,11 @@
             <!-- Product Images -->
             <div class="col-lg-6">
                 <div class="product-image-container">
-                    <img id="product-main-image" src="{{ product.get_image_url }}" alt="{{ product.name }}" class="product-main-image">
+                    <img id="product-main-image" src="{{ product.get_image_url }}" alt="{{ product.name }}" class="product-main-image" loading="lazy">
                     <div class="product-thumbnails">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)" title="메인 이미지">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 1">
+                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 2">
                     </div>
                 </div>
             </div>
@@ -37,12 +37,12 @@
                     
                     <!-- Rating -->
                     <div class="product-rating">
-                        <div class="stars">
-                            <span class="star" data-rating="1">★</span>
-                            <span class="star" data-rating="2">★</span>
-                            <span class="star" data-rating="3">★</span>
-                            <span class="star" data-rating="4">★</span>
-                            <span class="star" data-rating="5">★</span>
+                        <div class="stars" role="group" aria-label="상품 평점">
+                            <span class="star" data-rating="1" role="button" tabindex="0" aria-label="1점">★</span>
+                            <span class="star" data-rating="2" role="button" tabindex="0" aria-label="2점">★</span>
+                            <span class="star" data-rating="3" role="button" tabindex="0" aria-label="3점">★</span>
+                            <span class="star" data-rating="4" role="button" tabindex="0" aria-label="4점">★</span>
+                            <span class="star" data-rating="5" role="button" tabindex="0" aria-label="5점">★</span>
                         </div>
                         <span id="rating-score" class="rating-score">4.2</span>
                         <span class="rating-count">(127명 평가)</span>
@@ -59,9 +59,9 @@
                         <div class="quantity-selector">
                             <label for="quantity">수량:</label>
                             <div class="quantity-control">
-                                <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                                <input type="number" id="quantity" value="1" min="1" max="99">
-                                <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                                <button class="quantity-btn" onclick="decreaseQuantity()" type="button" aria-label="수량 감소">-</button>
+                                <input type="number" id="quantity" value="1" min="1" max="99" aria-label="상품 수량">
+                                <button class="quantity-btn" onclick="increaseQuantity()" type="button" aria-label="수량 증가">+</button>
                             </div>
                         </div>
                     </div>
@@ -69,11 +69,15 @@
                     <!-- Action Buttons -->
                     <div class="product-actions">
                         {% if product.is_active %}
-                        <button class="btn btn-primary btn-lg" onclick="addToCartFromDetail()">
-                            장바구니 담기
-                        </button>
-                        <button class="btn btn-secondary btn-lg" onclick="buyNow()">
-                            바로 구매
+                        <form method="post" action="{% url 'cart:cart_add' product.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" id="hidden-quantity" value="1">
+                            <button type="submit" class="btn btn-primary btn-lg" aria-label="장바구니에 상품 추가">
+                                <span class="me-2">🛒</span>장바구니 담기
+                            </button>
+                        </form>
+                        <button class="btn btn-secondary btn-lg" onclick="buyNow()" type="button" aria-label="상품 바로 구매">
+                            <span class="me-2">💳</span>바로 구매
                         </button>
                         {% else %}
                         <button class="btn btn-secondary btn-lg" disabled>

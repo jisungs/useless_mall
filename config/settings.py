@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'shop_app',   # Shop app (renamed from test_app)
     'users',      # Users app
     'cart',       # Cart app
+    'orders',     # Orders app
 ]
 
 MIDDLEWARE = [

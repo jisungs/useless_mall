@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}주문 상세 - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">📦 주문 상세</h1>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="row">
+                <!-- 주문 정보 -->
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">주문 정보</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>주문번호:</strong> #{{ order.id }}</p>
+                                    <p><strong>주문일:</strong> {{ order.created_at|date:"Y년 m월 d일 H:i" }}</p>
+                                    <p><strong>주문자:</strong> {{ order.user.username }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>주문 상태:</strong> 
+                                        <span class="badge 
+                                            {% if order.status == 'pending' %}bg-warning
+                                            {% elif order.status == 'paid' %}bg-success
+                                            {% elif order.status == 'shipped' %}bg-info
+                                            {% elif order.status == 'delivered' %}bg-primary
+                                            {% elif order.status == 'cancelled' %}bg-danger
+                                            {% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </p>
+                                    <p><strong>총 금액:</strong> <span class="fw-bold text-primary">{{ order.get_formatted_total }}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 주문 상품 목록 -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">주문 상품</h5>
+                            
+                            {% for item in order.items.all %}
+                                <div class="row align-items-center mb-3 pb-3 border-bottom">
+                                    <div class="col-md-2">
+                                        <img src="{{ item.product.get_image_url }}" 
+                                             alt="{{ item.product.name }}" 
+                                             class="img-fluid rounded">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="mb-1">{{ item.product.name }}</h6>
+                                        <p class="text-muted mb-0">{{ item.product.category.name }}</p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p class="mb-0">{{ item.get_formatted_price }}</p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p class="mb-0">수량: {{ item.quantity }}</p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p class="mb-0 fw-bold">{{ item.get_formatted_total }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 배송 정보 및 결제 -->
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">배송 정보</h5>
+                            <p><strong>받는 사람:</strong> {{ order.shipping_name }}</p>
+                            <p><strong>배송 주소:</strong> {{ order.shipping_address }}</p>
+                            <p><strong>연락처:</strong> {{ order.shipping_phone }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 결제 버튼 -->
+                    {% if order.status == 'pending' %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">결제하기</h5>
+                                <p class="text-muted">가짜 결제 시스템입니다. 실제 결제는 이루어지지 않습니다.</p>
+                                <div class="d-grid">
+                                    <a href="{% url 'orders:payment_success' order.id %}" class="btn btn-success btn-lg">
+                                        💳 결제하기 ({{ order.get_formatted_total }})
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif order.status == 'paid' %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">결제 완료</h5>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i>
+                                    결제가 완료되었습니다!
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'orders:order_list' %}" class="btn btn-outline-primary">
+                            주문 목록으로
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-bold);
+    color: var(--primary-black);
+}
+
+.badge {
+    font-size: 0.875rem;
+}
+
+.btn-success {
+    background-color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.btn-success:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+</style>
+{% endblock %}

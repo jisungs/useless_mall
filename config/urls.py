@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('shop_app.urls')),
     path('users/', include('users.urls')),
     path('cart/', include('cart.urls')),
+    path('orders/', include('orders.urls')),
 ]
 
 # Serve static files during development

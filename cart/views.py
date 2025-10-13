@@ -50,6 +50,7 @@ def cart_update(request, product_id):
     return redirect('cart:cart_detail')
 
 
+@require_POST
 def cart_clear(request):
     """장바구니 비우기"""
     cart = Cart(request)

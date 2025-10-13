@@ -326,6 +326,530 @@
             transform: translateY(-4px);
         }
         
+        /* Product Detail Page Styles */
+        .breadcrumb-nav {
+            background-color: var(--gray-50);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .breadcrumb {
+            margin-bottom: 0;
+            font-family: var(--font-primary);
+        }
+        
+        .breadcrumb-item a {
+            color: var(--primary-black);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--gray-600);
+        }
+        
+        .product-detail-section {
+            padding: var(--space-xl) 0;
+        }
+        
+        .product-image-container {
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .product-main-image {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-main-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .product-thumbnails {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+            justify-content: center;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail:hover {
+            border-color: var(--primary-black);
+            transform: scale(1.05);
+        }
+        
+        .thumbnail.active {
+            border-color: var(--primary-black);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-info {
+            padding: var(--space-lg);
+        }
+        
+        .product-name {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .star {
+            color: #ffc107;
+            font-size: var(--text-lg);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .star:hover {
+            color: #ff8c00;
+        }
+        
+        .rating-score {
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+        }
+        
+        .rating-count {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+        }
+        
+        .product-price-large {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .product-description-large {
+            font-size: var(--text-lg);
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .product-options {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .quantity-selector label {
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            background-color: var(--gray-100);
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            transition: background-color 0.2s ease;
+        }
+        
+        .quantity-btn:hover {
+            background-color: var(--gray-200);
+        }
+        
+        .quantity-btn:active {
+            background-color: var(--gray-300);
+        }
+        
+        #quantity {
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            text-align: center;
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            width: 60px;
+            outline: none;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .product-actions .btn {
+            flex: 1;
+            padding: var(--space-md) var(--space-lg);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+        }
+        
+        .product-features {
+            background-color: var(--gray-50);
+            padding: var(--space-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .product-features h4 {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-md);
+        }
+        
+        .product-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .product-features li {
+            padding: var(--space-sm) 0;
+            color: var(--gray-700);
+            position: relative;
+            padding-left: var(--space-lg);
+        }
+        
+        .product-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: var(--font-bold);
+        }
+        
+        /* Product Tabs */
+        .product-tabs-section {
+            padding: var(--space-xl) 0;
+            background-color: var(--gray-50);
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .nav-tabs .nav-link {
+            background-color: transparent;
+            border: none;
+            color: var(--gray-600);
+            font-weight: var(--font-semibold);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: 0;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-black);
+            border-bottom-color: var(--gray-300);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-black);
+            border-bottom-color: var(--primary-black);
+            background-color: transparent;
+        }
+        
+        .tab-content-body {
+            background-color: var(--primary-white);
+            padding: var(--space-xl);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-content-body h4,
+        .tab-content-body h5 {
+            font-family: var(--font-primary);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* Reviews */
+        .reviews-summary {
+            margin-bottom: var(--space-xl);
+        }
+        
+        .rating-overview {
+            text-align: center;
+            padding: var(--space-lg);
+            background-color: var(--gray-50);
+            border-radius: var(--border-radius);
+        }
+        
+        .overall-rating {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-black);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .stars-large {
+            margin-bottom: var(--space-sm);
+        }
+        
+        .stars-large .star {
+            font-size: var(--text-2xl);
+        }
+        
+        .rating-breakdown {
+            padding: var(--space-lg);
+        }
+        
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .rating-label {
+            min-width: 30px;
+            font-weight: var(--font-semibold);
+        }
+        
+        .progress {
+            flex: 1;
+            height: 8px;
+            background-color: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-green);
+            transition: width 0.3s ease;
+        }
+        
+        .rating-percent {
+            min-width: 40px;
+            text-align: right;
+            font-weight: var(--font-semibold);
+        }
+        
+        .review-item {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: var(--space-md);
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .reviewer-name {
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+        }
+        
+        .review-rating .star {
+            font-size: var(--text-sm);
+        }
+        
+        .review-date {
+            color: var(--gray-500);
+            font-size: var(--text-sm);
+        }
+        
+        .review-content {
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+        
+        /* Comments */
+        .comment-form {
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
+            background-color: var(--gray-50);
+            border-radius: var(--border-radius);
+        }
+        
+        .comment-item {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: var(--space-md);
+        }
+        
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .commenter-name {
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+        }
+        
+        .comment-date {
+            color: var(--gray-500);
+            font-size: var(--text-sm);
+        }
+        
+        .comment-content {
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+        
+        /* Inquiry */
+        .inquiry-form {
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
+            background-color: var(--gray-50);
+            border-radius: var(--border-radius);
+        }
+        
+        .inquiry-item {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: var(--space-md);
+        }
+        
+        .inquiry-item:last-child {
+            border-bottom: none;
+        }
+        
+        .inquiry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .inquiry-title {
+            font-weight: var(--font-semibold);
+            color: var(--primary-black);
+        }
+        
+        .inquiry-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+        }
+        
+        .inquiry-status.answered {
+            background-color: var(--accent-green);
+            color: var(--primary-white);
+        }
+        
+        .inquiry-status.pending {
+            background-color: var(--accent-yellow);
+            color: var(--primary-black);
+        }
+        
+        .inquiry-content {
+            color: var(--gray-700);
+            line-height: 1.5;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .inquiry-date {
+            color: var(--gray-500);
+            font-size: var(--text-sm);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-main-image {
+                height: 300px;
+            }
+            
+            .thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .product-name {
+                font-size: var(--text-2xl);
+            }
+            
+            .product-price-large {
+                font-size: var(--text-3xl);
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+            
+            .product-actions .btn {
+                width: 100%;
+            }
+            
+            .rating-bar {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+            
+            .rating-percent {
+                text-align: left;
+            }
+        }
+        
         /* Utility Classes */
         .text-center {
             text-align: center;
@@ -697,6 +1221,354 @@
             } else {
                 navbar.style.backgroundColor = '#FFFFFF';
                 navbar.style.backdropFilter = 'none';
+            }
+        });
+        
+        // ===== 상품 상세 페이지 전용 함수들 =====
+        
+        // 메인 이미지 변경
+        function changeMainImage(src) {
+            const mainImage = document.getElementById('product-main-image');
+            if (mainImage) {
+                mainImage.src = src;
+                
+                // 모든 썸네일에서 active 클래스 제거
+                document.querySelectorAll('.thumbnail').forEach(thumb => {
+                    thumb.classList.remove('active');
+                });
+                
+                // 클릭된 썸네일에 active 클래스 추가
+                event.target.classList.add('active');
+                
+                // 부드러운 전환 효과
+                mainImage.style.opacity = '0.7';
+                setTimeout(() => {
+                    mainImage.style.opacity = '1';
+                }, 150);
+            }
+        }
+        
+        // 수량 증가
+        function increaseQuantity() {
+            const quantityInput = document.getElementById('quantity');
+            if (quantityInput) {
+                const currentValue = parseInt(quantityInput.value) || 1;
+                const maxValue = parseInt(quantityInput.getAttribute('max')) || 99;
+                
+                if (currentValue < maxValue) {
+                    quantityInput.value = currentValue + 1;
+                    updateQuantityDisplay();
+                } else {
+                    showAlert(`최대 수량은 ${maxValue}개입니다.`, 'warning');
+                }
+            }
+        }
+        
+        // 수량 감소
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById('quantity');
+            if (quantityInput) {
+                const currentValue = parseInt(quantityInput.value) || 1;
+                const minValue = parseInt(quantityInput.getAttribute('min')) || 1;
+                
+                if (currentValue > minValue) {
+                    quantityInput.value = currentValue - 1;
+                    updateQuantityDisplay();
+                } else {
+                    showAlert(`최소 수량은 ${minValue}개입니다.`, 'warning');
+                }
+            }
+        }
+        
+        // 수량 표시 업데이트
+        function updateQuantityDisplay() {
+            const quantityInput = document.getElementById('quantity');
+            const hiddenQuantity = document.getElementById('hidden-quantity');
+            
+            if (quantityInput) {
+                const value = parseInt(quantityInput.value) || 1;
+                
+                // 숨겨진 필드도 동기화
+                if (hiddenQuantity) {
+                    hiddenQuantity.value = value;
+                }
+                
+                // 수량이 변경될 때마다 애니메이션 효과
+                quantityInput.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    quantityInput.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+        
+        // 상품 상세 페이지에서 장바구니에 추가
+        function addToCartFromDetail() {
+            const productName = document.getElementById('product-name');
+            const productPrice = document.getElementById('product-price');
+            const quantityInput = document.getElementById('quantity');
+            
+            if (productName && productPrice && quantityInput) {
+                const name = productName.textContent.trim();
+                const priceText = productPrice.textContent.trim();
+                const quantity = parseInt(quantityInput.value) || 1;
+                
+                // 가격에서 숫자만 추출 (₩ 기호 제거)
+                const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0;
+                
+                // 장바구니에 추가
+                for (let i = 0; i < quantity; i++) {
+                    addToCart(name, price);
+                }
+                
+                // 성공 메시지
+                showAlert(`${name}을(를) ${quantity}개 장바구니에 추가했습니다!`, 'success');
+                
+                // 장바구니 아이콘 애니메이션
+                animateCartIcon();
+            } else {
+                showAlert('상품 정보를 불러올 수 없습니다.', 'error');
+            }
+        }
+        
+        // 바로 구매
+        function buyNow() {
+            const productName = document.getElementById('product-name');
+            const productPrice = document.getElementById('product-price');
+            const quantityInput = document.getElementById('quantity');
+            
+            if (productName && productPrice && quantityInput) {
+                const name = productName.textContent.trim();
+                const priceText = productPrice.textContent.trim();
+                const quantity = parseInt(quantityInput.value) || 1;
+                
+                // 가격에서 숫자만 추출
+                const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0;
+                const totalPrice = price * quantity;
+                
+                // 확인 메시지
+                const confirmMessage = `${name}을(를) ${quantity}개 바로 구매하시겠습니까?\n총 금액: ₩${totalPrice.toLocaleString()}`;
+                
+                if (confirm(confirmMessage)) {
+                    // 로딩 표시
+                    const buyBtn = event.target;
+                    const originalText = buyBtn.textContent;
+                    buyBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>구매 처리 중...';
+                    buyBtn.disabled = true;
+                    
+                    // 구매 처리 시뮬레이션
+                    setTimeout(() => {
+                        showAlert(`${name} 구매가 완료되었습니다! 쓰잘데기를 선택해주셔서 감사합니다.`, 'success');
+                        
+                        // 버튼 원상복구
+                        buyBtn.textContent = originalText;
+                        buyBtn.disabled = false;
+                        
+                        // 홈으로 이동
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 2000);
+                    }, 2000);
+                }
+            } else {
+                showAlert('상품 정보를 불러올 수 없습니다.', 'error');
+            }
+        }
+        
+        // 장바구니 아이콘 애니메이션
+        function animateCartIcon() {
+            const cartIcon = document.querySelector('.navbar-nav .nav-link[href*="cart"]');
+            if (cartIcon) {
+                cartIcon.style.transform = 'scale(1.2)';
+                cartIcon.style.color = '#28a745';
+                
+                setTimeout(() => {
+                    cartIcon.style.transform = 'scale(1)';
+                    cartIcon.style.color = '';
+                }, 500);
+            }
+        }
+        
+        // 별점 클릭 이벤트
+        function initializeStarRating() {
+            const stars = document.querySelectorAll('.star[data-rating]');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    updateStarRating(rating);
+                });
+                
+                star.addEventListener('mouseenter', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    highlightStars(rating);
+                });
+                
+                // 키보드 접근성 (Enter, Space 키)
+                star.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const rating = parseInt(this.getAttribute('data-rating'));
+                        updateStarRating(rating);
+                    }
+                });
+            });
+            
+            // 별점 영역에서 마우스가 나갈 때 원래 상태로 복원
+            const starsContainer = document.querySelector('.stars');
+            if (starsContainer) {
+                starsContainer.addEventListener('mouseleave', function() {
+                    resetStarHighlight();
+                });
+            }
+        }
+        
+        // 별점 업데이트
+        function updateStarRating(rating) {
+            const stars = document.querySelectorAll('.star[data-rating]');
+            const ratingScore = document.getElementById('rating-score');
+            
+            stars.forEach(star => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.textContent = '★';
+                    star.style.color = '#ffc107';
+                } else {
+                    star.textContent = '☆';
+                    star.style.color = '#ddd';
+                }
+            });
+            
+            if (ratingScore) {
+                ratingScore.textContent = rating.toFixed(1);
+            }
+            
+            showAlert(`평점 ${rating}점을 선택했습니다!`, 'info');
+        }
+        
+        // 별점 하이라이트
+        function highlightStars(rating) {
+            const stars = document.querySelectorAll('.star[data-rating]');
+            stars.forEach(star => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
+        // 별점 하이라이트 리셋
+        function resetStarHighlight() {
+            const stars = document.querySelectorAll('.star[data-rating]');
+            stars.forEach(star => {
+                star.style.color = '#ffc107'; // 기본 색상으로 복원
+            });
+        }
+        
+        // 탭 전환 애니메이션
+        function initializeTabAnimations() {
+            const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-bs-target');
+                    const targetTab = document.querySelector(targetId);
+                    
+                    if (targetTab) {
+                        targetTab.style.opacity = '0';
+                        setTimeout(() => {
+                            targetTab.style.opacity = '1';
+                        }, 150);
+                    }
+                });
+            });
+        }
+        
+        // 폼 제출 이벤트 처리
+        function initializeFormHandlers() {
+            // 댓글 폼
+            const commentForm = document.getElementById('commentForm');
+            if (commentForm) {
+                commentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const commentText = document.getElementById('commentText');
+                    
+                    if (commentText && commentText.value.trim()) {
+                        showAlert('댓글이 등록되었습니다! (데모 버전)', 'success');
+                        commentText.value = '';
+                    } else {
+                        showAlert('댓글을 입력해주세요.', 'warning');
+                    }
+                });
+            }
+            
+            // 문의 폼
+            const inquiryForm = document.getElementById('inquiryForm');
+            if (inquiryForm) {
+                inquiryForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const inquiryTitle = document.getElementById('inquiryTitle');
+                    const inquiryContent = document.getElementById('inquiryContent');
+                    
+                    if (inquiryTitle && inquiryContent && 
+                        inquiryTitle.value.trim() && inquiryContent.value.trim()) {
+                        showAlert('문의가 등록되었습니다! 빠른 시일 내에 답변드리겠습니다.', 'success');
+                        inquiryForm.reset();
+                    } else {
+                        showAlert('제목과 내용을 모두 입력해주세요.', 'warning');
+                    }
+                });
+            }
+        }
+        
+        // 상품 상세 페이지 초기화
+        function initializeProductDetail() {
+            // 별점 시스템 초기화
+            initializeStarRating();
+            
+            // 탭 애니메이션 초기화
+            initializeTabAnimations();
+            
+            // 폼 핸들러 초기화
+            initializeFormHandlers();
+            
+            // 수량 입력 필드 이벤트
+            const quantityInput = document.getElementById('quantity');
+            if (quantityInput) {
+                quantityInput.addEventListener('change', function() {
+                    const value = parseInt(this.value) || 1;
+                    const min = parseInt(this.getAttribute('min')) || 1;
+                    const max = parseInt(this.getAttribute('max')) || 99;
+                    
+                    if (value < min) {
+                        this.value = min;
+                        showAlert(`최소 수량은 ${min}개입니다.`, 'warning');
+                    } else if (value > max) {
+                        this.value = max;
+                        showAlert(`최대 수량은 ${max}개입니다.`, 'warning');
+                    }
+                    
+                    updateQuantityDisplay();
+                });
+            }
+            
+            // 이미지 로딩 완료 시 애니메이션
+            const mainImage = document.getElementById('product-main-image');
+            if (mainImage) {
+                mainImage.addEventListener('load', function() {
+                    this.style.opacity = '0';
+                    setTimeout(() => {
+                        this.style.transition = 'opacity 0.5s ease';
+                        this.style.opacity = '1';
+                    }, 100);
+                });
+            }
+        }
+        
+        // 페이지 로드 시 상품 상세 페이지 초기화 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            // 상품 상세 페이지인지 확인
+            if (document.getElementById('product-main-image')) {
+                initializeProductDetail();
             }
         });
         

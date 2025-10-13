@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}주문하기 - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">🛒 주문하기</h1>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if cart %}
+                <div class="row">
+                    <!-- 주문 상품 목록 -->
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">주문 상품</h5>
+                                
+                                {% for item in cart %}
+                                    <div class="row align-items-center mb-3 pb-3 border-bottom">
+                                        <div class="col-md-2">
+                                            <img src="{{ item.product.get_image_url }}" 
+                                                 alt="{{ item.product.name }}" 
+                                                 class="img-fluid rounded">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6 class="mb-1">{{ item.product.name }}</h6>
+                                            <p class="text-muted mb-0">{{ item.product.category.name }}</p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p class="mb-0">₩{{ item.price|floatformat:0 }}</p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p class="mb-0">수량: {{ item.quantity }}</p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p class="mb-0 fw-bold">₩{{ item.total_price|floatformat:0 }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 주문 정보 및 배송 정보 -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">주문 정보</h5>
+                                
+                                <!-- 총 금액 -->
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="fw-bold">총 금액:</span>
+                                    <span class="fw-bold text-primary fs-5">₩{{ cart.get_total_price|floatformat:0 }}</span>
+                                </div>
+                                
+                                <!-- 배송 정보 폼 -->
+                                <form method="post">
+                                    {% csrf_token %}
+                                    
+                                    <div class="mb-3">
+                                        <label for="shipping_name" class="form-label">받는 사람</label>
+                                        <input type="text" class="form-control" id="shipping_name" name="shipping_name" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="shipping_address" class="form-label">배송 주소</label>
+                                        <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="shipping_phone" class="form-label">연락처</label>
+                                        <input type="tel" class="form-control" id="shipping_phone" name="shipping_phone" required>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            주문하기
+                                        </button>
+                                        <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-secondary">
+                                            장바구니로 돌아가기
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-muted">장바구니가 비어있습니다</h4>
+                            <p class="text-muted">주문할 상품을 장바구니에 담아주세요!</p>
+                            <a href="{% url 'product_list' %}" class="btn btn-primary">
+                                상품 보러가기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-family: var(--font-primary);
+    font-weight: var(--font-bold);
+    color: var(--primary-black);
+}
+
+.form-control {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-family: var(--font-primary);
+    padding: 12px 16px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-black);
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-black);
+    border-color: var(--primary-black);
+}
+
+.btn-primary:hover {
+    background-color: var(--gray-800);
+    border-color: var(--gray-800);
+}
+</style>
+{% endblock %}
