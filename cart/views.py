@@ -17,10 +17,24 @@ def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = Cart(request)
     
-    quantity = int(request.POST.get('quantity', 1))
-    cart.add(product=product, quantity=quantity)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        # 수량 검증
+        if quantity <= 0 or quantity > 99:
+            messages.error(request, '수량은 1개 이상 99개 이하로 입력해주세요.')
+            return redirect('cart:cart_detail')
+        
+        # 재고 검증
+        if quantity > product.stock_quantity:
+            messages.error(request, f'재고가 부족합니다. (현재 재고: {product.stock_quantity}개)')
+            return redirect('cart:cart_detail')
+        
+        cart.add(product=product, quantity=quantity)
+        messages.success(request, f'{product.name}이(가) 장바구니에 추가되었습니다!')
+        
+    except ValueError:
+        messages.error(request, '올바른 수량을 입력해주세요.')
     
-    messages.success(request, f'{product.name}이(가) 장바구니에 추가되었습니다!')
     return redirect('cart:cart_detail')
 
 
@@ -41,11 +55,23 @@ def cart_update(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = Cart(request)
     
-    quantity = int(request.POST.get('quantity', 1))
-    if quantity > 0:
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        
+        # 수량 검증
+        if quantity <= 0 or quantity > 99:
+            messages.error(request, '수량은 1개 이상 99개 이하로 입력해주세요.')
+            return redirect('cart:cart_detail')
+        
+        # 재고 검증
+        if quantity > product.stock_quantity:
+            messages.error(request, f'재고가 부족합니다. (현재 재고: {product.stock_quantity}개)')
+            return redirect('cart:cart_detail')
+        
         cart.add(product=product, quantity=quantity, override_quantity=True)
-    else:
-        cart.remove(product)
+        
+    except ValueError:
+        messages.error(request, '올바른 수량을 입력해주세요.')
     
     return redirect('cart:cart_detail')
 

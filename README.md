@@ -239,6 +239,7 @@
 - [x] **반응형**: 모바일/태블릿/데스크톱 완벽 대응
 - [x] **JavaScript**: 장바구니, 애니메이션, 알림 시스템
 - [x] **앱 구조**: test_app → shop_app 이름 변경 완료
+- [x] **개발 환경 접속 문제 해결**: DEBUG 설정 및 보안 설정 최적화
 
 #### **🔄 다음 작업 예정 (Day 4 오후)**
 - [ ] **프로덕션 배포 설정**
@@ -359,6 +360,27 @@ python manage.py runserver 8001
 - [ ] `kill -9 [PID]`로 프로세스 강제 종료
 - [ ] `lsof -ti:8000`으로 포트 해제 확인
 - [ ] 서버 재시작
+
+### 접속 문제 해결 (HTTPS 리다이렉트)
+```bash
+# 문제: HTTP 접속 시 HTTPS로 리다이렉트 (301 에러)
+# 원인: DEBUG=False로 설정되어 프로덕션 보안 설정 적용
+
+# 해결 1: DEBUG 기본값 수정
+# config/settings.py에서 DEBUG = config('DEBUG', default=True, cast=bool)
+
+# 해결 2: 보안 설정 단순화
+# 개발 환경에서 SECURE_SSL_REDIRECT = False 명시적 설정
+
+# 해결 3: 브라우저 HSTS 캐시 클리어
+# 브라우저 설정에서 localhost HSTS 캐시 삭제
+```
+
+### 접속 문제 해결 체크리스트
+- [x] DEBUG 기본값 `True`로 수정
+- [x] 보안 설정 명시적 비활성화
+- [x] HTTP 접속 정상화 확인 (`curl http://localhost:8000`)
+- [x] 브라우저에서 정상 접속 확인
 
 ## 📁 프로젝트 구조
 

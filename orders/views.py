@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.utils.html import escape
 from decimal import Decimal
 from .models import Order, OrderItem
 from cart.cart import Cart
@@ -17,13 +18,27 @@ def order_create(request):
         return redirect('cart:cart_detail')
     
     if request.method == 'POST':
-        # 배송 정보 수집
-        shipping_name = request.POST.get('shipping_name')
-        shipping_address = request.POST.get('shipping_address')
-        shipping_phone = request.POST.get('shipping_phone')
+        # 배송 정보 수집 및 검증
+        shipping_name = escape(request.POST.get('shipping_name', '').strip())
+        shipping_address = escape(request.POST.get('shipping_address', '').strip())
+        shipping_phone = escape(request.POST.get('shipping_phone', '').strip())
         
+        # 입력 검증
         if not all([shipping_name, shipping_address, shipping_phone]):
             messages.error(request, '모든 배송 정보를 입력해주세요.')
+            return render(request, 'orders/checkout.html', {'cart': cart})
+        
+        # 길이 제한 검증
+        if len(shipping_name) > 100:
+            messages.error(request, '받는 사람 이름은 100자 이하로 입력해주세요.')
+            return render(request, 'orders/checkout.html', {'cart': cart})
+        
+        if len(shipping_address) > 500:
+            messages.error(request, '배송 주소는 500자 이하로 입력해주세요.')
+            return render(request, 'orders/checkout.html', {'cart': cart})
+        
+        if len(shipping_phone) > 20:
+            messages.error(request, '연락처는 20자 이하로 입력해주세요.')
             return render(request, 'orders/checkout.html', {'cart': cart})
         
         # 주문 생성 (트랜잭션 사용)
@@ -77,9 +92,10 @@ def order_list(request):
     return render(request, 'orders/order_list.html', {'orders': orders})
 
 
+@login_required
 def payment_success(request, order_id):
     """결제 성공 페이지 (가짜 결제)"""
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order, id=order_id, user=request.user)
     
     # 주문 상태를 결제 완료로 변경
     if order.status == 'pending':

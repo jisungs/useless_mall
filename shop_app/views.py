@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Q
+from django.utils.html import escape
 from .models import Product, Category
 
 def home(request):
@@ -29,8 +30,12 @@ def product_detail(request, product_id):
 
 def product_search(request):
     """상품 검색 페이지"""
-    query = request.GET.get('q', '')
+    query = escape(request.GET.get('q', '').strip())
     products = Product.objects.filter(is_active=True)
+    
+    # 검색어 길이 제한
+    if len(query) > 100:
+        query = query[:100]
     
     if query:
         products = products.filter(
