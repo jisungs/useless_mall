@@ -9,7 +9,36 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProductDetail();
     initializeEventListeners();
     loadProductFromURL();
+    loadRatingData(); // 평점 데이터 로드 추가
 });
+
+// 평점 데이터 로드
+function loadRatingData() {
+    // 현재 페이지가 상품 상세 페이지인지 확인
+    const productId = getProductIdFromURL();
+    if (!productId) return;
+    
+    fetch(`/products/${productId}/rating-data/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateRatingDisplay(data);
+    })
+    .catch(error => {
+        console.error('Error loading rating data:', error);
+    });
+}
+
+// URL에서 상품 ID 추출
+function getProductIdFromURL() {
+    const path = window.location.pathname;
+    const match = path.match(/\/products\/(\d+)\//);
+    return match ? match[1] : null;
+}
 
 // URL에서 상품 정보 로드
 function loadProductFromURL() {
@@ -403,29 +432,78 @@ function addInquiry(type, title, content, email) {
 function submitRating(rating) {
     if (!currentProduct) return;
     
-    // 평점 업데이트 (실제로는 서버로 전송)
-    updateRating(rating);
-    
-    showAlert(`${rating}점으로 평가해주셔서 감사합니다!`, 'success');
+    // AJAX로 서버에 평점 데이터 요청
+    fetch(`/products/${currentProduct.id}/rating-data/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateRatingDisplay(data);
+        showAlert(`${rating}점으로 평가해주셔서 감사합니다!`, 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('오류가 발생했습니다.', 'danger');
+    });
 }
 
-// 평점 업데이트
-function updateRating(newRating) {
-    const currentRating = parseFloat(document.getElementById('rating-score').textContent);
-    const currentCount = parseInt(document.querySelector('.rating-count').textContent.match(/\d+/)[0]);
-    
-    // 새로운 평점 계산 (간단한 평균)
-    const newAverage = ((currentRating * currentCount) + newRating) / (currentCount + 1);
-    
-    // 평점 업데이트
-    document.getElementById('rating-score').textContent = newAverage.toFixed(1);
-    document.querySelector('.rating-count').textContent = `(${currentCount + 1}명 평가)`;
+// 평점 표시 업데이트 (서버 데이터 기반)
+function updateRatingDisplay(data) {
+    // 평점 점수 업데이트
+    document.getElementById('rating-score').textContent = data.average_rating;
+    document.querySelector('.rating-count').textContent = `(${data.rating_count}명 평가)`;
     
     // 별점 표시 업데이트
-    updateStarDisplay(newAverage);
+    updateStarDisplay(data.average_rating);
+    
+    // 평점 분포 업데이트
+    updateRatingDistribution(data.rating_distribution);
     
     // 탭 제목 업데이트
-    document.getElementById('reviews-tab').textContent = `고객평점 (${currentCount + 1})`;
+    document.getElementById('reviews-tab').textContent = `고객평점 (${data.rating_count})`;
+}
+
+// 평점 분포 업데이트
+function updateRatingDistribution(distribution) {
+    const ratingBreakdown = document.querySelector('.rating-breakdown');
+    if (!ratingBreakdown) return;
+    
+    ratingBreakdown.innerHTML = '';
+    
+    for (let rating = 5; rating >= 1; rating--) {
+        const percentage = distribution[rating] || 0;
+        const ratingBar = document.createElement('div');
+        ratingBar.className = 'rating-bar';
+        ratingBar.innerHTML = `
+            <span class="rating-label">${rating}점</span>
+            <div class="progress">
+                <div class="progress-bar" style="width: ${percentage}%"></div>
+            </div>
+            <span class="rating-percent">${percentage}%</span>
+        `;
+        ratingBreakdown.appendChild(ratingBar);
+    }
+}
+
+// 평점 업데이트 (기존 함수 - 호환성 유지)
+function updateRating(newRating) {
+    // 기존 로직을 서버 데이터 기반으로 변경
+    fetch(`/products/${currentProduct.id}/rating-data/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateRatingDisplay(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 // 이메일 유효성 검사
