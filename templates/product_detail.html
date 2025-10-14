@@ -34,7 +34,15 @@
             <div class="col-lg-6">
                 <div class="product-info">
                     <h1 id="product-name" class="product-name">{{ product.name }}</h1>
-                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                        
                     <!-- Rating -->
                     <div class="product-rating">
                         <div class="stars" role="group" aria-label="상품 평점">
@@ -44,8 +52,25 @@
                             <span class="star" data-rating="4" role="button" tabindex="0" aria-label="4점">★</span>
                             <span class="star" data-rating="5" role="button" tabindex="0" aria-label="5점">★</span>
                         </div>
-                        <span id="rating-score" class="rating-score">4.2</span>
-                        <span class="rating-count">(127명 평가)</span>
+                        <span id="rating-score" class="rating-score">{{ product.get_average_rating }}</span>
+                        <span class="rating-count">({{ product.get_rating_count }}명 평가)</span>
+                        
+                        <!-- 리뷰 작성 버튼 -->
+                        {% if user.is_authenticated %}
+                            {% if product.has_user_reviewed %}
+                                <a href="{% url 'edit_review' product.id %}" class="btn btn-sm btn-outline-primary ms-2">
+                                    내 리뷰 수정
+                                </a>
+                            {% else %}
+                                <a href="{% url 'submit_review' product.id %}" class="btn btn-sm btn-primary ms-2">
+                                    리뷰 작성
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}" class="btn btn-sm btn-outline-primary ms-2">
+                                로그인 후 리뷰 작성
+                            </a>
+                        {% endif %}
                     </div>
 
                     <div class="product-price-large" id="product-price">{{ product.get_formatted_price }}</div>
@@ -146,18 +171,13 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">
-                    고객평점 (127)
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab">
-                    고객댓글 (23)
+                <button class="nav-link" id="reviews-comments-tab" data-bs-toggle="tab" data-bs-target="#reviews-comments" type="button" role="tab">
+                    리뷰 ({{ product.get_rating_count }})& 댓글 ({{ product.get_comment_count }}) 
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="inquiry-tab" data-bs-toggle="tab" data-bs-target="#inquiry" type="button" role="tab">
-                    상품문의
+                    상품문의 ({{ product.get_inquiry_count }})
                 </button>
             </li>
         </ul>
@@ -177,245 +197,271 @@
                 </div>
             </div>
 
-            <!-- Reviews Tab -->
-            <div class="tab-pane fade" id="reviews" role="tabpanel">
+            <!-- Reviews & Comments Tab -->
+            <div class="tab-pane fade" id="reviews-comments" role="tabpanel">
                 <div class="tab-content-body">
+                    <!-- 평점 요약 -->
                     <div class="reviews-summary">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="rating-overview">
-                                    <div class="overall-rating">4.2</div>
+                                    <div class="overall-rating">{{ product.get_average_rating }}</div>
                                     <div class="stars-large">
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">☆</span>
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= product.get_average_rating %}
+                                                <span class="star">★</span>
+                                            {% else %}
+                                                <span class="star">☆</span>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
-                                    <div class="rating-count">127명 평가</div>
+                                    <div class="rating-count">{{ product.get_rating_count }}명 평가</div>
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="rating-breakdown">
-                                    <div class="rating-bar">
-                                        <span class="rating-label">5점</span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 60%"></div>
+                                    {% for rating, percentage in product.get_rating_distribution.items %}
+                                        <div class="rating-bar">
+                                            <span class="rating-label">{{ rating }}점</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: {{ percentage }}%"></div>
+                                            </div>
+                                            <span class="rating-percent">{{ percentage }}%</span>
                                         </div>
-                                        <span class="rating-percent">60%</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="rating-label">4점</span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 25%"></div>
-                                        </div>
-                                        <span class="rating-percent">25%</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="rating-label">3점</span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 10%"></div>
-                                        </div>
-                                        <span class="rating-percent">10%</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="rating-label">2점</span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 3%"></div>
-                                        </div>
-                                        <span class="rating-percent">3%</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="rating-label">1점</span>
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 2%"></div>
-                                        </div>
-                                        <span class="rating-percent">2%</span>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="reviews-list">
+                    <!-- 리뷰와 댓글 목록 -->
+                    <div class="reviews-comments-list">
                         <h5>최근 리뷰</h5>
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <span class="reviewer-name">김쓰잘</span>
-                                    <div class="review-rating">
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
+                        {% for review in product.get_recent_reviews %}
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <span class="reviewer-name">{{ review.user.username }}</span>
+                                        <div class="review-rating">
+                                            {{ review.get_rating_stars }}
+                                        </div>
+                                    </div>
+                                    <div class="review-actions">
+                                        <span class="review-date">{{ review.created_at|date:"Y.m.d" }}</span>
+                                        {% if user.is_authenticated %}
+                                            {% if user.is_staff or review.user == user %}
+                                                <div class="review-buttons">
+                                                    {% if user.is_staff %}
+                                                        <a href="{% url 'admin_edit_review' product.id review.id %}" class="btn btn-sm btn-outline-primary">
+                                                            관리자 수정
+                                                        </a>
+                                                        <form method="post" action="{% url 'admin_delete_review' product.id review.id %}" class="d-inline">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('리뷰를 삭제하시겠습니까?')">
+                                                                관리자 삭제
+                                                            </button>
+                                                        </form>
+                                                    {% elif review.user == user %}
+                                                        <a href="{% url 'edit_review' product.id %}" class="btn btn-sm btn-outline-primary">
+                                                            수정
+                                                        </a>
+                                                        <form method="post" action="{% url 'delete_review' product.id %}" class="d-inline">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('리뷰를 삭제하시겠습니까?')">
+                                                                삭제
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <span class="review-date">2024.01.15</span>
-                            </div>
-                            <div class="review-content">
-                                정말 쓸모없지만 너무 재미있어요! 친구들이 다 웃어요. 완전 추천합니다!
-                            </div>
-                        </div>
-
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <span class="reviewer-name">박데기</span>
-                                    <div class="review-rating">
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">☆</span>
-                                    </div>
+                                <div class="review-content">
+                                    <h6>{{ review.title }}</h6>
+                                    <p>{{ review.content }}</p>
                                 </div>
-                                <span class="review-date">2024.01.12</span>
                             </div>
-                            <div class="review-content">
-                                예상했던 대로 완전히 쓸모없네요. 하지만 그게 바로 이 상품의 매력이에요!
+                        {% empty %}
+                            <div class="text-center py-4">
+                                <p class="text-muted">아직 리뷰가 없습니다. 첫 번째 리뷰를 작성해보세요!</p>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'submit_review' product.id %}" class="btn btn-primary">
+                                        리뷰 작성하기
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}" class="btn btn-outline-primary">
+                                        로그인 후 리뷰 작성
+                                    </a>
+                                {% endif %}
                             </div>
-                        </div>
+                        {% endfor %}
 
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <span class="reviewer-name">이재미</span>
-                                    <div class="review-rating">
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                        <span class="star">★</span>
-                                    </div>
+                        <h5 class="mt-4">최근 댓글 ({{ product.get_comment_count }})</h5>
+                        {% for comment in product.get_recent_comments %}
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <span class="commenter-name">{{ comment.user.username }}</span>
+                                    <span class="comment-date">{{ comment.created_at|date:"Y.m.d H:i" }}</span>
+                                    {% if user.is_authenticated and comment.user == user %}
+                                        <form method="post" action="{% url 'delete_comment' product.id comment.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('댓글을 삭제하시겠습니까?')">
+                                                삭제
+                                            </button>
+                                        </form>
+                                    {% endif %}
                                 </div>
-                                <span class="review-date">2024.01.10</span>
+                                <div class="comment-content">
+                                    {{ comment.content }}
+                                </div>
                             </div>
-                            <div class="review-content">
-                                집에 놓아두니 모든 사람이 웃어요. 스트레스 해소에 최고입니다!
+                        {% empty %}
+                            <div class="text-center py-4">
+                                <p class="text-muted">아직 댓글이 없습니다. 첫 번째 댓글을 작성해보세요!</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comments Tab -->
-            <div class="tab-pane fade" id="comments" role="tabpanel">
-                <div class="tab-content-body">
-                    <div class="comment-form">
-                        <h5>댓글 작성</h5>
-                        <form id="commentForm">
-                            <div class="mb-3">
-                                <textarea class="form-control" id="commentText" rows="3" placeholder="댓글을 작성해주세요..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">댓글 등록</button>
-                        </form>
+                        {% endfor %}
                     </div>
 
-                    <div class="comments-list">
-                        <h5>고객 댓글 (23)</h5>
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="commenter-name">김웃음</span>
-                                <span class="comment-date">2024.01.15 14:30</span>
-                            </div>
-                            <div class="comment-content">
-                                이거 진짜 웃겨요! 친구한테 선물했는데 완전 좋아하네요 ㅋㅋㅋ
+                    <!-- 댓글 작성 폼 -->
+                    {% if user.is_authenticated %}
+                        <div class="comment-form">
+                            <h5>댓글 작성</h5>
+                            <form method="post" action="{% url 'submit_comment' product.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <textarea class="form-control" name="content" rows="3" placeholder="댓글을 작성해주세요..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">댓글 등록</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="comment-form">
+                            <h5>댓글 작성</h5>
+                            <div class="alert alert-info">
+                                댓글을 작성하려면 로그인이 필요합니다.
+                                <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}" class="btn btn-outline-primary ms-2">
+                                    로그인하기
+                                </a>
                             </div>
                         </div>
-
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="commenter-name">박재미</span>
-                                <span class="comment-date">2024.01.14 09:15</span>
-                            </div>
-                            <div class="comment-content">
-                                쓸모없는 게 이렇게 재미있을 줄 몰랐어요. 다른 상품도 궁금하네요!
-                            </div>
-                        </div>
-
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="commenter-name">이유머</span>
-                                <span class="comment-date">2024.01.13 16:45</span>
-                            </div>
-                            <div class="comment-content">
-                                집에 놓아두니 모든 사람이 웃어요. 스트레스 해소에 최고입니다!
-                            </div>
-                        </div>
-
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="commenter-name">최쓰잘</span>
-                                <span class="comment-date">2024.01.12 11:20</span>
-                            </div>
-                            <div class="comment-content">
-                                완전 쓸모없지만 그게 바로 매력이에요. 추천합니다!
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Inquiry Tab -->
             <div class="tab-pane fade" id="inquiry" role="tabpanel">
                 <div class="tab-content-body">
-                    <div class="inquiry-form">
-                        <h5>상품 문의</h5>
-                        <form id="inquiryForm">
-                            <div class="mb-3">
-                                <label for="inquiryType" class="form-label">문의 유형</label>
-                                <select class="form-control" id="inquiryType">
-                                    <option value="product">상품 문의</option>
-                                    <option value="shipping">배송 문의</option>
-                                    <option value="exchange">교환/반품</option>
-                                    <option value="other">기타</option>
-                                </select>
+                    {% if user.is_authenticated %}
+                        <div class="inquiry-form">
+                            <h5>상품 문의</h5>
+                            <form method="post" action="{% url 'submit_inquiry' product.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="inquiry_type" class="form-label">문의 유형</label>
+                                    <select class="form-control" name="inquiry_type" id="inquiry_type" required>
+                                        <option value="product">상품 문의</option>
+                                        <option value="shipping">배송 문의</option>
+                                        <option value="exchange">교환/반품</option>
+                                        <option value="other">기타</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">제목</label>
+                                    <input type="text" class="form-control" name="title" id="title" placeholder="문의 제목을 입력해주세요" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">내용</label>
+                                    <textarea class="form-control" name="content" id="content" rows="5" placeholder="문의 내용을 입력해주세요" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">이메일</label>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="답변 받을 이메일을 입력해주세요" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">문의 등록</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="inquiry-form">
+                            <h5>상품 문의</h5>
+                            <div class="alert alert-info">
+                                문의를 작성하려면 로그인이 필요합니다.
+                                <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}" class="btn btn-outline-primary ms-2">
+                                    로그인하기
+                                </a>
                             </div>
-                            <div class="mb-3">
-                                <label for="inquiryTitle" class="form-label">제목</label>
-                                <input type="text" class="form-control" id="inquiryTitle" placeholder="문의 제목을 입력해주세요">
-                            </div>
-                            <div class="mb-3">
-                                <label for="inquiryContent" class="form-label">내용</label>
-                                <textarea class="form-control" id="inquiryContent" rows="5" placeholder="문의 내용을 입력해주세요"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="inquiryEmail" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="inquiryEmail" placeholder="답변 받을 이메일을 입력해주세요">
-                            </div>
-                            <button type="submit" class="btn btn-primary">문의 등록</button>
-                        </form>
-                    </div>
+                        </div>
+                    {% endif %}
 
                     <div class="inquiry-list">
-                        <h5>문의 내역</h5>
-                        <div class="inquiry-item">
-                            <div class="inquiry-header">
-                                <span class="inquiry-title">배송은 언제 되나요?</span>
-                                <span class="inquiry-status answered">답변완료</span>
+                        <h5>문의 내역 ({{ product.get_inquiry_count }})</h5>
+                        {% for inquiry in product.get_recent_inquiries %}
+                            <div class="inquiry-item">
+                                <div class="inquiry-header">
+                                    <span class="inquiry-title">{{ inquiry.title }}</span>
+                                    <span class="inquiry-status {% if inquiry.is_answered %}answered{% else %}pending{% endif %}">
+                                        {% if inquiry.is_answered %}답변완료{% else %}답변대기{% endif %}
+                                    </span>
+                                    {% if user.is_authenticated and inquiry.user == user and not inquiry.is_answered %}
+                                        <div class="inquiry-actions">
+                                            <a href="{% url 'edit_inquiry' product.id inquiry.id %}" class="btn btn-sm btn-outline-primary">수정</a>
+                                            <form method="post" action="{% url 'delete_inquiry' product.id inquiry.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('문의를 삭제하시겠습니까?')">
+                                                    삭제
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="inquiry-content">
+                                    <p><strong>문의 유형:</strong> {{ inquiry.get_inquiry_type_display }}</p>
+                                    <p><strong>문의 내용:</strong></p>
+                                    <p>{{ inquiry.content }}</p>
+                                    {% if inquiry.is_answered and inquiry.answer %}
+                                        <div class="inquiry-answer">
+                                            <p><strong>답변:</strong></p>
+                                            <p>{{ inquiry.answer }}</p>
+                                            <small class="text-muted">답변일: {{ inquiry.answered_at|date:"Y.m.d H:i" }}</small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="inquiry-date">{{ inquiry.created_at|date:"Y.m.d H:i" }}</div>
                             </div>
-                            <div class="inquiry-content">
-                                주문 후 2-3일 내에 배송됩니다.
+                        {% empty %}
+                            <div class="text-center py-4">
+                                <p class="text-muted">아직 문의가 없습니다. 첫 번째 문의를 작성해보세요!</p>
                             </div>
-                            <div class="inquiry-date">2024.01.10</div>
-                        </div>
-
-                        <div class="inquiry-item">
-                            <div class="inquiry-header">
-                                <span class="inquiry-title">교환이 가능한가요?</span>
-                                <span class="inquiry-status pending">답변대기</span>
-                            </div>
-                            <div class="inquiry-content">
-                                상품에 하자가 있는 경우 교환이 가능합니다.
-                            </div>
-                            <div class="inquiry-date">2024.01.12</div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+// 메시지 자동 사라짐 기능
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    
+    alerts.forEach(function(alert) {
+        // 3초 후에 자동으로 사라지도록 설정
+        setTimeout(function() {
+            if (alert && alert.parentNode) {
+                alert.style.transition = 'opacity 0.5s ease-out';
+                alert.style.opacity = '0';
+                
+                // 애니메이션 완료 후 DOM에서 제거
+                setTimeout(function() {
+                    if (alert.parentNode) {
+                        alert.parentNode.removeChild(alert);
+                    }
+                }, 500); // 0.5초 애니메이션 시간
+            }
+        }, 3000); // 3초 후 시작
+    });
+});
+</script>
 
 {% endblock %}

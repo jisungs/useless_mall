@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}리뷰 작성 - {{ product.name }} - 쓰잘데기{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">
+                        {% if review %}리뷰 수정{% else %}리뷰 작성{% endif %}
+                    </h2>
+                    
+                    <!-- 상품 정보 -->
+                    <div class="product-info mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="img-fluid rounded">
+                            </div>
+                            <div class="col-md-9">
+                                <h5>{{ product.name }}</h5>
+                                <p class="text-muted">{{ product.get_formatted_price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 리뷰 폼 -->
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- 평점 선택 -->
+                        <div class="mb-4">
+                            <label class="form-label">평점</label>
+                            <div class="rating-input">
+                                {% for choice in form.rating %}
+                                    <div class="form-check form-check-inline">
+                                        {{ choice.tag }}
+                                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                            {{ choice.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- 제목 -->
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">제목</label>
+                            {{ form.title }}
+                        </div>
+                        
+                        <!-- 내용 -->
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">리뷰 내용</label>
+                            {{ form.content }}
+                            <div class="form-text">솔직한 리뷰를 작성해주세요. 다른 고객들에게 도움이 됩니다.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if review %}리뷰 수정{% else %}리뷰 등록{% endif %}
+                            </button>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary">
+                                취소
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

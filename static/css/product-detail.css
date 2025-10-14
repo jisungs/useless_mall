@@ -677,3 +677,318 @@
     font-size: var(--text-sm);
     margin-top: var(--space-xs);
 }
+
+/* 리뷰 시스템 추가 스타일 */
+.rating-input {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+}
+
+.rating-input .form-check {
+    margin: 0;
+}
+
+.rating-input .form-check-input {
+    margin-right: var(--space-xs);
+}
+
+/* 리뷰 아이템 개선 */
+.review-item {
+    transition: all 0.3s ease;
+}
+
+.review-item:hover {
+    background-color: var(--gray-100);
+    transform: translateY(-2px);
+}
+
+.review-item h6 {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-sm);
+    color: var(--primary-black);
+}
+
+/* 리뷰 액션 버튼 스타일 */
+.review-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.review-buttons {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.review-buttons .btn {
+    font-size: var(--text-sm);
+    padding: var(--space-xs) var(--space-sm);
+}
+
+/* 관리자 버튼 스타일 */
+.review-buttons .btn-outline-primary {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.review-buttons .btn-outline-primary:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* 평점 분포 개선 */
+.rating-breakdown {
+    background-color: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+}
+
+.rating-bar {
+    padding: var(--space-sm) 0;
+}
+
+.rating-bar:hover {
+    background-color: var(--gray-100);
+}
+
+/* 리뷰 작성 버튼 */
+.btn-review {
+    background-color: var(--primary-black);
+    border-color: var(--primary-black);
+    color: var(--primary-white);
+}
+
+.btn-review:hover {
+    background-color: var(--gray-800);
+    border-color: var(--gray-800);
+}
+
+/* 리뷰와 댓글 통합 목록 스타일 */
+.reviews-comments-list {
+    margin-bottom: var(--space-lg);
+}
+
+.reviews-comments-list h5 {
+    color: var(--primary-black);
+    margin-bottom: var(--space-md);
+    font-weight: var(--font-semibold);
+    border-bottom: 2px solid var(--gray-200);
+    padding-bottom: var(--space-sm);
+}
+
+.reviews-comments-list h5.mt-4 {
+    margin-top: var(--space-xl);
+}
+
+/* 댓글 시스템 스타일 */
+.comment-form {
+    background-color: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.comment-form h5 {
+    color: var(--primary-black);
+    margin-bottom: var(--space-md);
+    font-weight: var(--font-semibold);
+}
+
+.comment-item {
+    background-color: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.commenter-name {
+    font-weight: var(--font-semibold);
+    color: var(--primary-black);
+}
+
+.comment-date {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+.comment-content {
+    color: var(--gray-700);
+    line-height: 1.6;
+}
+
+/* 문의 시스템 스타일 */
+.inquiry-form {
+    background-color: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.inquiry-form h5 {
+    color: var(--primary-black);
+    margin-bottom: var(--space-md);
+    font-weight: var(--font-semibold);
+}
+
+.inquiry-item {
+    background-color: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    transition: all 0.3s ease;
+}
+
+.inquiry-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.inquiry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.inquiry-title {
+    font-weight: var(--font-semibold);
+    color: var(--primary-black);
+    flex: 1;
+}
+
+.inquiry-status {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.inquiry-status.answered {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.inquiry-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.inquiry-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.inquiry-content {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: var(--space-sm);
+}
+
+.inquiry-answer {
+    background-color: var(--gray-100);
+    border-left: 4px solid var(--primary-color);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.inquiry-answer p {
+    margin-bottom: var(--space-sm);
+}
+
+.inquiry-date {
+    color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+/* 탭 개수 표시 개선 */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* 반응형 개선 */
+@media (max-width: 768px) {
+    .rating-input {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+
+    .review-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+        width: 100%;
+    }
+
+    .review-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .comment-header,
+    .inquiry-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .inquiry-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .comment-form,
+    .inquiry-form {
+        padding: var(--space-md);
+    }
+}
