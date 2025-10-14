@@ -162,6 +162,9 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
+# CSRF 설정
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://uselessmall-production.up.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
+
 # 프로덕션 환경에서는 환경변수로 설정
 if not DEBUG:
     SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
