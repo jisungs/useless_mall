@@ -32,7 +32,11 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card hover-lift">
-                <img src="{% static 'img/product_01.jpg' %}" alt="{{ product.name }}" class="product-image">
+                {% if product.get_primary_image %}
+                    <img src="{{ product.get_primary_image }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                    <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="product-image">
+                {% endif %}
                 <h3 class="product-title">{{ product.name }}</h3>
                 <div class="product-price-info">
                     <p class="product-price">₩{{ product.price|floatformat:0 }}</p>

@@ -1,6 +1,26 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Product, Review, Comment, Inquiry
+from .models import Category, Product, ProductImage, Review, Comment, Inquiry
+
+# Register your models here.
+
+
+class ProductImageInline(admin.StackedInline):
+    """상품 이미지 인라인 관리"""
+    model = ProductImage
+    extra = 1
+    fields = ['image', 'alt_text', 'is_primary', 'order']
+    readonly_fields = ['created_at']
+    
+    def get_queryset(self, request):
+        """인라인에서 사용할 쿼리셋"""
+        return super().get_queryset(request).order_by('order', 'created_at')
+    
+    class Media:
+        css = {
+            'all': ('admin/css/inline-image.css',)
+        }
+        js = ('admin/js/inline-image.js',)
 
 # Register your models here.
 
@@ -15,20 +35,28 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     ordering = ['name']
 
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price', 'shipping_fee', 'stock_status_display', 'stock_quantity', 'is_active', 'created_at']
+    list_display = ['name', 'category', 'price', 'shipping_fee', 'stock_status_display', 'stock_quantity', 'image_count', 'is_active', 'created_at']
     list_filter = ['category', 'is_active', 'created_at']
     search_fields = ['name', 'description']
     list_editable = ['price', 'shipping_fee', 'stock_quantity', 'is_active']
     ordering = ['-created_at']
+    inlines = [ProductImageInline]
     
     fieldsets = (
         ('기본 정보', {
             'fields': ('name', 'category', 'price', 'shipping_fee', 'description')
         }),
-        ('이미지', {
-            'fields': ('image_path',)
+        ('이미지 관리', {
+            'fields': ('detail_image',),
+            'description': '상세 설명에 표시될 이미지를 업로드하세요'
+        }),
+        ('이미지 (하위 호환성)', {
+            'fields': ('image_path',),
+            'description': '정적 이미지 파일명을 입력하세요 (예: product_01.jpg) - 하위 호환성용'
         }),
         ('재고 관리', {
             'fields': ('stock_quantity', 'is_active'),
@@ -48,6 +76,19 @@ class ProductAdmin(admin.ModelAdmin):
         )
     stock_status_display.short_description = '재고 상태'
     
+    def image_count(self, obj):
+        """이미지 개수 표시"""
+        count = obj.get_image_count()
+        if count > 0:
+            return format_html(
+                '<span style="color: green; font-weight: bold;">{}</span>',
+                count
+            )
+        return format_html(
+            '<span style="color: red;">0</span>'
+        )
+    image_count.short_description = '이미지 개수'
+    
     def stock_status_filter(self, obj):
         """재고 상태별 필터링을 위한 메서드"""
         return obj.get_stock_status()
@@ -57,7 +98,7 @@ class ProductAdmin(admin.ModelAdmin):
         """관리자 페이지에서 사용할 쿼리셋"""
         return super().get_queryset(request)
     
-    actions = ['add_stock_action', 'mark_out_of_stock']
+    actions = ['add_stock_action', 'mark_out_of_stock', 'manage_images']
     
     def add_stock_action(self, request, queryset):
         """선택된 상품들의 재고를 일괄 추가"""
@@ -71,6 +112,15 @@ class ProductAdmin(admin.ModelAdmin):
         updated = queryset.update(stock_quantity=0)
         self.message_user(request, f"{updated}개 상품을 품절 처리했습니다.")
     mark_out_of_stock.short_description = "선택된 상품 품절 처리"
+    
+    def manage_images(self, request, queryset):
+        """선택된 상품들의 이미지 관리"""
+        if queryset.count() == 1:
+            product = queryset.first()
+            self.message_user(request, f"'{product.name}' 상품의 이미지를 관리하세요. 아래 인라인에서 이미지를 추가/수정/삭제할 수 있습니다.")
+        else:
+            self.message_user(request, "이미지 관리는 한 번에 하나의 상품만 선택해주세요.", level='WARNING')
+    manage_images.short_description = "선택된 상품의 이미지 관리"
 
 
 @admin.register(Review)

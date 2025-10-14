@@ -51,21 +51,81 @@
 .product-thumbnails {
     display: flex;
     gap: var(--space-sm);
+    margin-top: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .thumbnail {
     width: 80px;
     height: 80px;
     object-fit: cover;
+    border-radius: var(--border-radius);
     border: 1px solid var(--gray-300);
     cursor: pointer;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .thumbnail:hover,
 .thumbnail.active {
     border-color: var(--primary-black);
     transform: scale(1.05);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 다중 이미지 썸네일 개선 */
+.product-thumbnails::-webkit-scrollbar {
+    width: 6px;
+}
+
+.product-thumbnails::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 3px;
+}
+
+.product-thumbnails::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 3px;
+}
+
+.product-thumbnails::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+}
+
+/* 상세 설명 이미지 스타일 */
+.detail-image-container {
+    text-align: center;
+    margin: var(--space-lg) 0;
+}
+
+.detail-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.detail-image:hover {
+    transform: scale(1.02);
+}
+
+/* 상세 설명 섹션 개선 */
+#product-detail-description {
+    line-height: 1.8;
+}
+
+#product-detail-description p {
+    margin-bottom: var(--space-md);
+    color: var(--text-color);
+}
+
+#product-detail-description p:first-of-type {
+    font-weight: 500;
+    color: var(--primary-black);
 }
 
 /* Product Info */

@@ -21,12 +21,25 @@
             <!-- Product Images -->
             <div class="col-lg-6">
                 <div class="product-image-container">
-                    <img id="product-main-image" src="{{ product.get_image_url }}" alt="{{ product.name }}" class="product-main-image" loading="lazy">
-                    <div class="product-thumbnails">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)" title="메인 이미지">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 1">
-                        <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 2">
-                    </div>
+                    {% if product.get_all_images %}
+                        <!-- 업로드된 이미지가 있는 경우 -->
+                        {% with primary_image=product.get_all_images|first %}
+                            <img id="product-main-image" src="{{ primary_image.image.url }}" alt="{{ primary_image.alt_text|default:product.name }}" class="product-main-image" loading="lazy">
+                        {% endwith %}
+                        <div class="product-thumbnails">
+                            {% for image in product.get_all_images %}
+                                <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" class="thumbnail {% if forloop.first %}active{% endif %}" onclick="changeMainImage(this.src)" title="{{ image.alt_text|default:'이미지' }} {{ forloop.counter }}">
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <!-- 기존 정적 이미지 사용 -->
+                        <img id="product-main-image" src="{{ product.get_image_url }}" alt="{{ product.name }}" class="product-main-image" loading="lazy">
+                        <div class="product-thumbnails">
+                            <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)" title="메인 이미지">
+                            <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 1">
+                            <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)" title="추가 이미지 2">
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -188,11 +201,12 @@
                 <div class="tab-content-body">
                     <h4>상세 설명</h4>
                     <div id="product-detail-description">
+                        {% if product.detail_image %}
+                            <div class="detail-image-container mb-4">
+                                <img src="{{ product.detail_image.url }}" alt="{{ product.name }} 상세 이미지" class="detail-image img-fluid rounded">
+                            </div>
+                        {% endif %}
                         <p>{{ product.description }}</p>
-                        <p>이 상품은 완전히 쓸모없지만 재미있는 물건입니다.</p>
-                        <p>실용성을 포기하고 오직 재미만을 추구하는 철학으로 만들어진 특별한 상품입니다.</p>
-                        <p>일상의 지루함을 깨뜨리고 웃음을 선사하는 것이 이 상품의 유일한 목적입니다.</p>
-                        <p>친구나 가족에게 선물하면 분명 웃음이 터질 것입니다!</p>
                     </div>
                 </div>
             </div>

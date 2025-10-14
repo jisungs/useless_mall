@@ -25,6 +25,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="가격")
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="배송비")
     description = models.TextField(verbose_name="상품 설명")
+    detail_image = models.ImageField(upload_to='products/detail/', blank=True, null=True, verbose_name="상세 설명 이미지")
     image_path = models.CharField(max_length=200, verbose_name="이미지 파일명")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="카테고리")
     is_active = models.BooleanField(default=True, verbose_name="판매 중")
@@ -171,6 +172,55 @@ class Product(models.Model):
     def get_inquiry_count(self):
         """문의 개수"""
         return self.inquiries.count()
+    
+    def get_primary_image(self):
+        """대표 이미지 조회"""
+        primary_image = self.images.filter(is_primary=True).first()
+        if primary_image:
+            return primary_image.image.url
+        return None
+    
+    def get_all_images(self):
+        """모든 이미지 조회"""
+        return self.images.all()
+    
+    def get_image_count(self):
+        """이미지 개수"""
+        return self.images.count()
+
+
+class ProductImage(models.Model):
+    """상품 이미지 모델"""
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="상품")
+    image = models.ImageField(upload_to='products/', verbose_name="이미지")
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name="대체 텍스트")
+    is_primary = models.BooleanField(default=False, verbose_name="대표 이미지")
+    order = models.PositiveIntegerField(default=0, verbose_name="순서")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="생성일")
+    
+    class Meta:
+        verbose_name = "상품 이미지"
+        verbose_name_plural = "상품 이미지들"
+        ordering = ['order', 'created_at']
+    
+    def __str__(self):
+        return f"{self.product.name} - 이미지 {self.order + 1}"
+    
+    def save(self, *args, **kwargs):
+        # 첫 번째 이미지를 대표 이미지로 설정
+        if not self.product.images.exists():
+            self.is_primary = True
+        super().save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        # 대표 이미지 삭제 시 다음 이미지를 대표로 설정
+        if self.is_primary:
+            next_image = self.product.images.exclude(id=self.id).first()
+            if next_image:
+                next_image.is_primary = True
+                next_image.save()
+        super().delete(*args, **kwargs)
 
 
 class Review(models.Model):
