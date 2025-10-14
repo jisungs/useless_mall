@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-test-key-change-in-pr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,*.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,*.railway.app,*.onrender.com', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -170,7 +170,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # CSRF 설정
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://uselessmall-production.up.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://uselessmall-production.up.railway.app,https://uselessmall-web.onrender.com', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # 프로덕션 환경에서는 환경변수로 설정
 if not DEBUG:
