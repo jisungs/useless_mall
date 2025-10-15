@@ -12,9 +12,11 @@
 - **성공 확률**: 97%
 
 ### 🛠 기술 스택
-- **백엔드**: Django 5.2.7, SQLite, Django Session
+- **백엔드**: Django 5.2.7, SQLite/PostgreSQL, Django Session
 - **프론트엔드**: Bootstrap 5 (CDN), Vanilla JavaScript
 - **배포**: Railway (무료), Whitenoise, python-decouple
+- **데이터베이스**: SQLite (개발), PostgreSQL (프로덕션 준비 완료)
+- **이미지 처리**: Pillow, 정적 파일 서빙
 
 ## 🚀 현재 진행 상황
 
@@ -256,6 +258,7 @@
 - [x] **UI/UX 고도화**: 탭 통합, 메시지 자동 사라짐, 반응형 디자인
 - [x] **상품 이미지 관리 시스템**: 다중 이미지 지원, 대표 이미지 설정, Admin 계층적 관리
 - [x] **상세 설명 이미지 시스템**: 상품 상세 페이지에 이미지 표시 기능
+- [x] **Railway PostgreSQL 데이터베이스 연결 준비**: PostgreSQL 연결 설정 활성화 및 가이드 제공
 
 #### **🔄 다음 작업 예정 (Day 4 오후)**
 - [x] **프로덕션 배포 설정**
@@ -485,6 +488,47 @@ fake_shopping_mall/
 - **테스트 페이지**: "🎉 쓰잘데기 테스트 배포 성공!" 메시지 확인
 
 자세한 배포 방법은 [Railway_배포_가이드.md](plans/Railway_배포_가이드.md)를 참고하세요.
+
+### 🗄️ PostgreSQL 데이터베이스 연결 준비 ✅ **완료**
+
+#### 현재 상태
+- **데이터베이스 설정**: `settings.py`에서 PostgreSQL 연결 코드 활성화 완료
+- **의존성**: `psycopg2-binary==2.9.9`, `dj-database-url==2.1.0` 포함
+- **환경변수 기반**: `DATABASE_URL`로 PostgreSQL/SQLite 자동 전환
+- **모델 호환성**: 모든 모델 PostgreSQL 호환성 확인 완료
+
+#### Railway PostgreSQL 연결 단계
+1. **Railway에서 PostgreSQL 서비스 추가**
+   - Railway 대시보드 → "New" → "Database" → "PostgreSQL" 선택
+   - 데이터베이스 생성 후 `DATABASE_URL` 환경변수 복사
+
+2. **환경변수 설정**
+   ```
+   DATABASE_URL=postgresql://username:password@host:port/database
+   SECRET_KEY=your-production-secret-key
+   DEBUG=False
+   ALLOWED_HOSTS=your-domain.railway.app,*.railway.app
+   ```
+
+3. **데이터베이스 마이그레이션**
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+4. **데이터 이전 (선택사항)**
+   ```bash
+   # SQLite에서 데이터 덤프
+   python manage.py dumpdata > data.json
+   
+   # PostgreSQL로 데이터 로드
+   python manage.py loaddata data.json
+   ```
+
+#### 추가 고려사항
+- **미디어 파일**: AWS S3, Cloudinary, 또는 Railway 볼륨 스토리지 사용 권장
+- **환경별 설정**: 개발/프로덕션 환경 설정 분리
+- **백업**: 정기적인 데이터베이스 백업 설정
 
 #### 배포 단계 요약
 1. GitHub 레포지토리 생성 및 푸시
