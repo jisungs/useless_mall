@@ -72,7 +72,7 @@
                         </div>
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <button type="button" class="btn btn-primary btn-lg" id="submitBtn">
                                 <span class="me-2">💳</span>결제하기
                             </button>
                         </div>
@@ -113,29 +113,163 @@
     </div>
 </div>
 
-<!-- 폼 검증 JavaScript -->
+<!-- 결제 방식 선택 Modal -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-labelledby="paymentMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentMethodModalLabel">결제 방식 선택</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-info">
+                    <h6>현재 계좌이체로만 결제가 진행되고 있습니다.</h6>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6 class="card-title">계좌 정보</h6>
+                            <p class="mb-1"><strong>은행:</strong> 카카오뱅크</p>
+                            <p class="mb-1"><strong>계좌번호:</strong> 123-1234-1234</p>
+                            <p class="mb-0"><strong>예금주:</strong> 지성스</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>안내:</strong> 계좌이체 후 주문이 자동으로 처리됩니다.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="confirmPaymentBtn">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 결제 완료 Modal -->
+<div class="modal fade" id="paymentCompleteModal" tabindex="-1" aria-labelledby="paymentCompleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h4 class="text-success mb-3">결제가 완료되었습니다!</h4>
+                <p class="lead">주문이 성공적으로 처리되었습니다.</p>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-primary" id="goToOrderDetailBtn">주문 상세보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 폼 검증 및 Modal 처리 JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('directPurchaseForm');
     const submitBtn = document.getElementById('submitBtn');
+    const paymentMethodModal = new bootstrap.Modal(document.getElementById('paymentMethodModal'));
+    const paymentCompleteModal = new bootstrap.Modal(document.getElementById('paymentCompleteModal'));
     
-    if (form && submitBtn) {
-        form.addEventListener('submit', function(e) {
-            // 중복 제출 방지
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>처리 중...';
-            
+    let currentOrderId = null;
+    
+    // 결제하기 버튼 클릭 이벤트
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
             // 폼 검증
             const shippingName = document.getElementById('shipping_name').value.trim();
             const shippingAddress = document.getElementById('shipping_address').value.trim();
             const shippingPhone = document.getElementById('shipping_phone').value.trim();
             
             if (!shippingName || !shippingAddress || !shippingPhone) {
-                e.preventDefault();
                 alert('모든 배송 정보를 입력해주세요.');
+                return;
+            }
+            
+            // 결제 방식 선택 Modal 표시
+            paymentMethodModal.show();
+        });
+    }
+    
+    // 결제 확인 버튼 클릭 이벤트
+    const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+    if (confirmPaymentBtn) {
+        confirmPaymentBtn.addEventListener('click', function() {
+            // 결제 방식 선택 Modal 숨기기
+            paymentMethodModal.hide();
+            
+            // 로딩 표시
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>처리 중...';
+            
+            // 실제 주문 생성 요청
+            const formData = new FormData(form);
+            
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('주문 생성에 실패했습니다.');
+            })
+            .then(html => {
+                // 응답에서 주문 ID 추출 (간단한 방법)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const successMessage = doc.querySelector('.alert-success');
+                
+                if (successMessage) {
+                    // 성공 메시지에서 주문 ID 추출
+                    const match = successMessage.textContent.match(/#(\d+)/);
+                    if (match) {
+                        currentOrderId = match[1];
+                    }
+                    
+                    // 결제 완료 Modal 표시
+                    paymentCompleteModal.show();
+                } else {
+                    throw new Error('주문 생성에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('주문 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+            })
+            .finally(() => {
+                // 버튼 원상복구
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span class="me-2">💳</span>결제하기';
-                return false;
+            });
+        });
+    }
+    
+    // 주문 상세보기 버튼 클릭 이벤트
+    const goToOrderDetailBtn = document.getElementById('goToOrderDetailBtn');
+    if (goToOrderDetailBtn) {
+        goToOrderDetailBtn.addEventListener('click', function() {
+            if (currentOrderId) {
+                window.location.href = `/orders/order/${currentOrderId}/`;
+            } else {
+                window.location.href = '/orders/orders/';
+            }
+        });
+    }
+    
+    // 결제 방식 선택 Modal의 취소 버튼 클릭 시 이전 페이지로 이동
+    const paymentMethodModalElement = document.getElementById('paymentMethodModal');
+    if (paymentMethodModalElement) {
+        paymentMethodModalElement.addEventListener('hidden.bs.modal', function() {
+            // 취소 버튼이 클릭된 경우 (확인 버튼이 아닌 경우)
+            if (!submitBtn.disabled) {
+                // 이전 페이지로 이동
+                window.history.back();
             }
         });
     }
