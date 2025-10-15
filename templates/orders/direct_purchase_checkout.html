@@ -215,10 +215,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('주문 생성에 실패했습니다.');
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             })
             .then(data => {
                 if (data.success) {

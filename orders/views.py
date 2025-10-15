@@ -133,6 +133,8 @@ def payment_success(request, order_id):
 def direct_purchase_create(request, product_id):
     """바로 구매 주문 생성 (기존 함수와 충돌 방지)"""
     try:
+        print(f"Direct purchase request: {request.method}, Product ID: {product_id}")
+        print(f"Headers: {dict(request.headers)}")
         product = get_object_or_404(Product, id=product_id, is_active=True)
         
         if request.method == 'POST':
