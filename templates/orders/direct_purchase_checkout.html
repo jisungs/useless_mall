@@ -226,8 +226,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     currentOrderId = data.order_id;
-                    // 결제 완료 Modal 표시
-                    paymentCompleteModal.show();
+                    
+                    // 결제 완료 Modal 대신 payment_success 페이지로 리다이렉트
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        // 폴백: 결제 완료 Modal 표시
+                        paymentCompleteModal.show();
+                    }
                 } else {
                     throw new Error(data.error || '주문 생성에 실패했습니다.');
                 }

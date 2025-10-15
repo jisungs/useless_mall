@@ -124,7 +124,13 @@ def payment_success(request, order_id):
         order.save()
         messages.success(request, '결제가 완료되었습니다!')
     
-    return render(request, 'orders/payment_success.html', {'order': order})
+    # 바로구매 주문인지 구분 (주문 상품이 1개이고 특정 패턴으로 판단)
+    is_direct_purchase = order.items.count() == 1
+    
+    return render(request, 'orders/payment_success.html', {
+        'order': order,
+        'is_direct_purchase': is_direct_purchase
+    })
 
 
 @csrf_protect
@@ -133,8 +139,6 @@ def payment_success(request, order_id):
 def direct_purchase_create(request, product_id):
     """바로 구매 주문 생성 (기존 함수와 충돌 방지)"""
     try:
-        print(f"Direct purchase request: {request.method}, Product ID: {product_id}")
-        print(f"Headers: {dict(request.headers)}")
         product = get_object_or_404(Product, id=product_id, is_active=True)
         
         if request.method == 'POST':
@@ -219,15 +223,16 @@ def direct_purchase_create(request, product_id):
                     
                     messages.success(request, f'주문이 성공적으로 생성되었습니다! 주문번호: #{order.id}')
                     
-                    # AJAX 요청인 경우 JSON 응답 반환
+                    # AJAX 요청인 경우 JSON 응답 반환 (payment_success 페이지로 리다이렉트)
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                         return JsonResponse({
                             'success': True,
                             'order_id': order.id,
+                            'redirect_url': f'/orders/payment-success/{order.id}/',
                             'message': f'주문이 성공적으로 생성되었습니다! 주문번호: #{order.id}'
                         })
                     
-                    return redirect('orders:order_detail', order_id=order.id)
+                    return redirect('orders:payment_success', order_id=order.id)
                     
             except Exception as e:
                 error_message = f'주문 생성 중 오류가 발생했습니다: {str(e)}'
