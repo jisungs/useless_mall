@@ -149,7 +149,7 @@
                                 <span class="me-2">🛒</span>장바구니 담기
                             </button>
                         </form>
-                        <button class="btn btn-secondary btn-lg" onclick="buyNow()" type="button" aria-label="상품 바로 구매">
+                        <button class="btn btn-secondary btn-lg" onclick="showBuyNowModal()" type="button" aria-label="상품 바로 구매">
                             <span class="me-2">💳</span>바로 구매
                         </button>
                         {% else %}
@@ -206,7 +206,7 @@
                                 <img src="{{ product.detail_image.url }}" alt="{{ product.name }} 상세 이미지" class="detail-image img-fluid rounded">
                             </div>
                         {% endif %}
-                        <p>{{ product.description }}</p>
+                        <p>{{ product.description }}</p> 
                     </div>
                 </div>
             </div>
@@ -454,6 +454,40 @@
     </div>
 </section>
 
+<!-- 바로 구매 Modal (충돌 방지를 위한 고유 ID 사용) -->
+<div class="modal fade" id="buy-now-modal-{{ product.id }}" tabindex="-1" 
+     aria-labelledby="buyNowModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="buyNowModalLabel">바로 구매 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 구매 상품 정보 표시 -->
+                <div class="purchase-summary">
+                    <h6>구매 상품</h6>
+                    <div class="product-info d-flex">
+                        <img id="modal-product-image-{{ product.id }}" src="" alt="" class="modal-product-img me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        <div class="product-details flex-grow-1">
+                            <h6 id="modal-product-name-{{ product.id }}"></h6>
+                            <p id="modal-product-price-{{ product.id }}" class="text-muted"></p>
+                            <p>수량: <span id="modal-quantity-{{ product.id }}"></span>개</p>
+                            <p>배송비: <span id="modal-shipping-fee-{{ product.id }}"></span></p>
+                            <hr>
+                            <h5>총 금액: <span id="modal-total-price-{{ product.id }}" class="text-primary"></span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="confirmPurchaseBtn-{{ product.id }}">결제하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // 메시지 자동 사라짐 기능
 document.addEventListener('DOMContentLoaded', function() {
@@ -475,6 +509,96 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 3000); // 3초 후 시작
     });
+});
+
+// 안전한 바로 구매 Modal 함수 (기존 buyNow() 함수와 충돌 방지)
+function showBuyNowModal() {
+    try {
+        // 상품 정보 수집 (안전한 방식)
+        const productName = document.getElementById('product-name')?.textContent?.trim() || '';
+        const productPrice = document.getElementById('product-price')?.textContent?.trim() || '';
+        const quantity = parseInt(document.getElementById('quantity')?.value) || 1;
+        const productImage = document.getElementById('product-main-image')?.src || '';
+        
+        // 안전한 템플릿 변수 접근
+        const shippingFee = {{ product.shipping_fee|default:0 }};
+        const productId = {{ product.id|default:0 }};
+        const isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+        
+        // Modal에 정보 채우기 (고유 ID 사용)
+        const modalProductName = document.getElementById(`modal-product-name-${productId}`);
+        const modalProductPrice = document.getElementById(`modal-product-price-${productId}`);
+        const modalQuantity = document.getElementById(`modal-quantity-${productId}`);
+        const modalProductImage = document.getElementById(`modal-product-image-${productId}`);
+        
+        if (modalProductName) modalProductName.textContent = productName;
+        if (modalProductPrice) modalProductPrice.textContent = productPrice;
+        if (modalQuantity) modalQuantity.textContent = quantity;
+        if (modalProductImage) modalProductImage.src = productImage;
+        
+        // 가격 계산 (안전한 방식)
+        const price = parseFloat(productPrice.replace(/[^\d]/g, '')) || 0;
+        const totalPrice = (price + shippingFee) * quantity;
+        
+        const modalShippingFee = document.getElementById(`modal-shipping-fee-${productId}`);
+        const modalTotalPrice = document.getElementById(`modal-total-price-${productId}`);
+        
+        if (modalShippingFee) {
+            modalShippingFee.textContent = shippingFee === 0 ? '무료배송' : `₩${shippingFee.toLocaleString()}`;
+        }
+        if (modalTotalPrice) {
+            modalTotalPrice.textContent = `₩${totalPrice.toLocaleString()}`;
+        }
+        
+        // Modal 표시 (안전한 방식)
+        const modalElement = document.getElementById(`buy-now-modal-${productId}`);
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+        
+    } catch (error) {
+        console.error('Modal 표시 중 오류 발생:', error);
+        // 폴백: 기존 방식으로 처리
+        if (confirm('바로 구매하시겠습니까?')) {
+            window.location.href = '/orders/direct-purchase/{{ product.id }}/';
+        }
+    }
+}
+
+// 이벤트 리스너 등록 (안전한 방식)
+document.addEventListener('DOMContentLoaded', function() {
+    const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn-{{ product.id }}');
+    
+    if (confirmPurchaseBtn) {
+        confirmPurchaseBtn.addEventListener('click', function() {
+            try {
+                // 로그인 상태 확인 (안전한 방식)
+                const isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+                const quantity = parseInt(document.getElementById('quantity')?.value) || 1;
+                const productId = {{ product.id|default:0 }};
+                
+                // 수량 검증
+                if (quantity <= 0 || quantity > 99) {
+                    alert('수량은 1개 이상 99개 이하로 입력해주세요.');
+                    return;
+                }
+                
+                if (isAuthenticated) {
+                    // 로그인된 사용자: 바로 구매 페이지로 이동
+                    window.location.href = `/orders/direct-purchase/${productId}/?quantity=${quantity}`;
+                } else {
+                    // 비로그인 사용자: 회원가입 페이지로 이동
+                    const nextUrl = encodeURIComponent(`/orders/direct-purchase/${productId}/?quantity=${quantity}`);
+                    window.location.href = `/users/signup/?next=${nextUrl}`;
+                }
+            } catch (error) {
+                console.error('로그인 상태 확인 중 오류 발생:', error);
+                // 폴백: 회원가입 페이지로 이동
+                window.location.href = '/users/signup/';
+            }
+        });
+    }
 });
 </script>
 

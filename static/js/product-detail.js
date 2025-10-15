@@ -301,22 +301,6 @@ function addToCartFromDetail() {
     updateCartBadge();
 }
 
-// 바로 구매
-function buyNow() {
-    if (!currentProduct) return;
-    
-    // 장바구니에 추가
-    addToCartFromDetail();
-    
-    // 주문 확인
-    const totalPrice = currentProduct.price * currentQuantity;
-    const orderItems = `${currentProduct.name} × ${currentQuantity}`;
-    
-    if (confirm(`바로 구매하시겠습니까?\n\n주문 상품:\n${orderItems}\n\n총 금액: ₩${totalPrice.toLocaleString()}`)) {
-        processOrder();
-    }
-}
-
 // 주문 처리
 function processOrder() {
     // 로딩 표시

@@ -1330,50 +1330,6 @@
             }
         }
         
-        // 바로 구매
-        function buyNow() {
-            const productName = document.getElementById('product-name');
-            const productPrice = document.getElementById('product-price');
-            const quantityInput = document.getElementById('quantity');
-            
-            if (productName && productPrice && quantityInput) {
-                const name = productName.textContent.trim();
-                const priceText = productPrice.textContent.trim();
-                const quantity = parseInt(quantityInput.value) || 1;
-                
-                // 가격에서 숫자만 추출
-                const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0;
-                const totalPrice = price * quantity;
-                
-                // 확인 메시지
-                const confirmMessage = `${name}을(를) ${quantity}개 바로 구매하시겠습니까?\n총 금액: ₩${totalPrice.toLocaleString()}`;
-                
-                if (confirm(confirmMessage)) {
-                    // 로딩 표시
-                    const buyBtn = event.target;
-                    const originalText = buyBtn.textContent;
-                    buyBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>구매 처리 중...';
-                    buyBtn.disabled = true;
-                    
-                    // 구매 처리 시뮬레이션
-                    setTimeout(() => {
-                        showAlert(`${name} 구매가 완료되었습니다! 쓰잘데기를 선택해주셔서 감사합니다.`, 'success');
-                        
-                        // 버튼 원상복구
-                        buyBtn.textContent = originalText;
-                        buyBtn.disabled = false;
-                        
-                        // 홈으로 이동
-                        setTimeout(() => {
-                            window.location.href = '/';
-                        }, 2000);
-                    }, 2000);
-                }
-            } else {
-                showAlert('상품 정보를 불러올 수 없습니다.', 'error');
-            }
-        }
-        
         // 장바구니 아이콘 애니메이션
         function animateCartIcon() {
             const cartIcon = document.querySelector('.navbar-nav .nav-link[href*="cart"]');
