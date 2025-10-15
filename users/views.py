@@ -16,10 +16,24 @@ class SignUpView(CreateView):
     
     def form_valid(self, form):
         """폼이 유효할 때 사용자 생성 및 로그인"""
-        response = super().form_valid(form)
-        login(self.request, self.object)
-        messages.success(self.request, '회원가입이 완료되었습니다!')
-        return response
+        try:
+            response = super().form_valid(form)
+            login(self.request, self.object)
+            messages.success(self.request, '회원가입이 완료되었습니다!')
+            
+            # next 파라미터가 있으면 해당 페이지로 리다이렉트 (안전한 방식)
+            next_url = self.request.GET.get('next')
+            if next_url:
+                # URL 검증 (보안)
+                if next_url.startswith('/orders/direct-purchase/'):
+                    return redirect(next_url)
+                else:
+                    messages.warning(self.request, '잘못된 리다이렉트 URL입니다.')
+            
+            return response
+        except Exception as e:
+            messages.error(self.request, f'회원가입 중 오류가 발생했습니다: {str(e)}')
+            return redirect('signup')
 
 
 @login_required
