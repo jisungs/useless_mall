@@ -239,3 +239,21 @@ def direct_purchase_create(request, product_id):
     except Exception as e:
         messages.error(request, f'페이지 로딩 중 오류가 발생했습니다: {str(e)}')
         return redirect('home')
+
+
+def direct_purchase_payment_success(request, order_id):
+    """바로 구매 결제 성공 페이지 (기존 함수와 충돌 방지)"""
+    try:
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        
+        # 결제 완료 처리 (가짜 결제)
+        order.status = 'paid'
+        order.save()
+        
+        return render(request, 'orders/payment_success.html', {
+            'order': order,
+            'is_direct_purchase': True  # 바로 구매인지 구분
+        })
+    except Exception as e:
+        messages.error(request, f'결제 처리 중 오류가 발생했습니다: {str(e)}')
+        return redirect('home')

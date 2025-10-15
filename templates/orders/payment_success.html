@@ -13,6 +13,12 @@
                 
                 <h1 class="mb-4 text-success">🎉 결제가 완료되었습니다!</h1>
                 
+                {% if is_direct_purchase %}
+                    <p class="lead">바로 구매 주문이 성공적으로 처리되었습니다.</p>
+                {% else %}
+                    <p class="lead">주문이 성공적으로 처리되었습니다.</p>
+                {% endif %}
+                
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">주문 정보</h5>
