@@ -206,9 +206,7 @@ def direct_purchase_create(request, product_id):
                         total=total,
                         shipping_name=shipping_name,
                         shipping_address=shipping_address,
-                        shipping_phone=shipping_phone,
-                        # 주문 타입 구분을 위한 메타데이터
-                        notes=f"바로구매 - {product.name}"
+                        shipping_phone=shipping_phone
                     )
                     
                     # 주문 상품 생성
