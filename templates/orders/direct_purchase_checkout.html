@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}바로 구매 - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2>바로 구매</h2>
+            
+            <!-- 상품 정보 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>구매 상품</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{ product.get_image_url }}" alt="{{ product.name }}" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-9">
+                            <h5>{{ product.name }}</h5>
+                            <p class="text-muted">{{ product.description|truncatewords:20 }}</p>
+                            <p><strong>수량:</strong> {{ quantity }}개</p>
+                            <p><strong>상품 가격:</strong> {{ product.get_formatted_price }}</p>
+                            <p><strong>배송비:</strong> 
+                                {% if product.shipping_fee == 0 %}
+                                    <span class="badge bg-success">무료배송</span>
+                                {% else %}
+                                    {{ product.get_formatted_shipping_fee }}
+                                {% endif %}
+                            </p>
+                            <hr>
+                            <h4><strong>총 금액: {{ product.get_formatted_total_price }}</strong></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 배송 정보 입력 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>배송 정보</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="directPurchaseForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="{{ quantity }}">
+                        
+                        <div class="mb-3">
+                            <label for="shipping_name" class="form-label">받는 사람 *</label>
+                            <input type="text" class="form-control" id="shipping_name" name="shipping_name" 
+                                   value="{{ user.first_name }} {{ user.last_name }}" required
+                                   maxlength="100" aria-describedby="shipping_name_help">
+                            <div id="shipping_name_help" class="form-text">받는 사람의 이름을 입력해주세요.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="shipping_address" class="form-label">배송 주소 *</label>
+                            <textarea class="form-control" id="shipping_address" name="shipping_address" 
+                                      rows="3" placeholder="상세 주소를 입력해주세요" required
+                                      maxlength="500" aria-describedby="shipping_address_help"></textarea>
+                            <div id="shipping_address_help" class="form-text">배송받을 주소를 상세히 입력해주세요.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="shipping_phone" class="form-label">연락처 *</label>
+                            <input type="tel" class="form-control" id="shipping_phone" name="shipping_phone" 
+                                   placeholder="010-1234-5678" required
+                                   pattern="[0-9-+()\s]+" maxlength="20" aria-describedby="shipping_phone_help">
+                            <div id="shipping_phone_help" class="form-text">연락 가능한 전화번호를 입력해주세요.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <span class="me-2">💳</span>결제하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- 주문 요약 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>주문 요약</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <span>상품 가격:</span>
+                        <span>{{ product.get_formatted_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>배송비:</span>
+                        <span>
+                            {% if product.shipping_fee == 0 %}
+                                무료
+                            {% else %}
+                                {{ product.get_formatted_shipping_fee }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>총 금액:</strong>
+                        <strong class="text-primary">{{ product.get_formatted_total_price }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 폼 검증 JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('directPurchaseForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            // 중복 제출 방지
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>처리 중...';
+            
+            // 폼 검증
+            const shippingName = document.getElementById('shipping_name').value.trim();
+            const shippingAddress = document.getElementById('shipping_address').value.trim();
+            const shippingPhone = document.getElementById('shipping_phone').value.trim();
+            
+            if (!shippingName || !shippingAddress || !shippingPhone) {
+                e.preventDefault();
+                alert('모든 배송 정보를 입력해주세요.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="me-2">💳</span>결제하기';
+                return false;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
