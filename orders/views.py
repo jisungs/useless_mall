@@ -5,6 +5,7 @@ from django.db import transaction
 from django.utils.html import escape
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
 from decimal import Decimal
 from .models import Order, OrderItem
 from cart.cart import Cart
@@ -217,10 +218,28 @@ def direct_purchase_create(request, product_id):
                     )
                     
                     messages.success(request, f'주문이 성공적으로 생성되었습니다! 주문번호: #{order.id}')
+                    
+                    # AJAX 요청인 경우 JSON 응답 반환
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'order_id': order.id,
+                            'message': f'주문이 성공적으로 생성되었습니다! 주문번호: #{order.id}'
+                        })
+                    
                     return redirect('orders:order_detail', order_id=order.id)
                     
             except Exception as e:
-                messages.error(request, f'주문 생성 중 오류가 발생했습니다: {str(e)}')
+                error_message = f'주문 생성 중 오류가 발생했습니다: {str(e)}'
+                messages.error(request, error_message)
+                
+                # AJAX 요청인 경우 JSON 응답 반환
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': False,
+                        'error': error_message
+                    })
+                
                 return render(request, 'orders/direct_purchase_checkout.html', {
                     'product': product,
                     'quantity': quantity

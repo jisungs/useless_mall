@@ -118,7 +118,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="paymentMethodModalLabel">결제 방식 선택</h5>
+                <h5 class="modal-title" id="paymentMethodModalLabel">결재 방식 선택</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -210,37 +210,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
             .then(response => {
                 if (response.ok) {
-                    return response.text();
+                    return response.json();
                 }
                 throw new Error('주문 생성에 실패했습니다.');
             })
-            .then(html => {
-                // 응답에서 주문 ID 추출 (간단한 방법)
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const successMessage = doc.querySelector('.alert-success');
-                
-                if (successMessage) {
-                    // 성공 메시지에서 주문 ID 추출
-                    const match = successMessage.textContent.match(/#(\d+)/);
-                    if (match) {
-                        currentOrderId = match[1];
-                    }
-                    
+            .then(data => {
+                if (data.success) {
+                    currentOrderId = data.order_id;
                     // 결제 완료 Modal 표시
                     paymentCompleteModal.show();
                 } else {
-                    throw new Error('주문 생성에 실패했습니다.');
+                    throw new Error(data.error || '주문 생성에 실패했습니다.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('주문 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+                alert(`주문 생성 중 오류가 발생했습니다: ${error.message}`);
             })
             .finally(() => {
                 // 버튼 원상복구
